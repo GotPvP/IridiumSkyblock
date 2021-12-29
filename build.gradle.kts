@@ -18,8 +18,6 @@ repositories {
     maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.rosewooddev.io/repository/public/")
-    maven("https://repo.jeff-media.de/maven2/")
-
     maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
 }
 
@@ -49,11 +47,11 @@ dependencies {
     compileOnly("com.songoda:EpicSpawners:7.0.8")
     compileOnly("com.sk89q:WorldEdit:7.2.6")
 
-    // Enable lombok annotation processing
-
     compileOnly(files("../OPBlocks/lib/CurrenciesAPI.jar"))
     compileOnly(files("../OPBlocks/lib/OPCore-v1.16.jar"))
     compileOnly(files("../OPBlocks/lib/Outposts.jar"))
+
+    // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.22")
 
     // Test dependencies
@@ -108,7 +106,7 @@ tasks {
 // Set the Java version and vendor
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(16))
+        languageVersion.set(JavaLanguageVersion.of(8))
         vendor.set(JvmVendorSpec.ADOPTOPENJDK)
     }
 }

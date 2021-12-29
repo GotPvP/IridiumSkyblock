@@ -1,5 +1,8 @@
 package com.iridium.iridiumskyblock.managers;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.iridium.iridiumcore.dependencies.nbtapi.NBTCompound;
 import com.iridium.iridiumcore.dependencies.nbtapi.NBTItem;
@@ -18,6 +21,7 @@ import com.iridium.iridiumskyblock.configs.Configuration.IslandRegenSettings;
 import com.iridium.iridiumskyblock.configs.Schematics;
 import com.iridium.iridiumskyblock.database.*;
 import com.iridium.iridiumskyblock.generators.OceanGenerator;
+import com.iridium.iridiumskyblock.utils.BlockPosition;
 import com.iridium.iridiumskyblock.utils.LocationUtils;
 import com.iridium.iridiumskyblock.utils.PlayerUtils;
 import org.bukkit.*;
@@ -38,6 +42,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -453,6 +458,15 @@ public class IslandManager {
         return island;
     }
 
+
+    private static LoadingCache<BlockPosition, Optional<Island>> islandCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.MINUTES).build(
+            new CacheLoader<BlockPosition, Optional<Island>>() {
+                @Override
+                public Optional<Island> load(BlockPosition blockPosition) {
+                    return IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries().stream().filter(island -> island.isInIsland(blockPosition.getX(), blockPosition.getZ())).findFirst();
+                }
+            });
+
     /**
      * Gets an {@link Island} from locations.
      *
@@ -461,7 +475,9 @@ public class IslandManager {
      */
     public @NotNull Optional<Island> getIslandViaLocation(@NotNull Location location) {
         if (!IridiumSkyblockAPI.getInstance().isIslandWorld(location.getWorld())) return Optional.empty();
-        return IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries().stream().filter(island -> island.isInIsland(location)).findFirst();
+
+        return islandCache.getUnchecked(new BlockPosition(location.getBlockX(), location.getBlockZ()));
+        //return IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries().stream().filter(island -> island.get island.isInIsland(location)).findFirst();
     }
 
     /**

@@ -53,7 +53,6 @@ public class Configuration {
     public IslandDamageSettings pvpSettings = new IslandDamageSettings();
 
     public int distance = 151;
-    public int schematicPastingDelay = 1;
     public int islandRecalculateInterval = 10;
     public int maxIslandName = 16;
     public int minIslandName = 3;
