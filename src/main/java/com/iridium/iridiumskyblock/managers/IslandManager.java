@@ -463,7 +463,12 @@ public class IslandManager {
             new CacheLoader<BlockPosition, Optional<Island>>() {
                 @Override
                 public Optional<Island> load(BlockPosition blockPosition) {
-                    return IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries().stream().filter(island -> island.isInIsland(blockPosition.getX(), blockPosition.getZ())).findFirst();
+                    for(Island island : IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries()) {
+                        if(island.isInIsland(blockPosition.getX(), blockPosition.getZ())) {
+                            return Optional.of(island);
+                        }
+                    }
+                    return Optional.empty();
                 }
             });
 

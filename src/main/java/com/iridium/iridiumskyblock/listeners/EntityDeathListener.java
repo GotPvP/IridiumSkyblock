@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class EntityDeathListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void monitorEntityDeath(EntityDeathEvent event) {
         if(event.getEntityType() == EntityType.PLAYER) return;
         if (!IridiumSkyblockAPI.getInstance().isIslandWorld(event.getEntity().getWorld())) return;
@@ -39,23 +39,7 @@ public class EntityDeathListener implements Listener {
                 event.setDroppedExp(event.getDroppedExp() * 2);
             }
 
-            IslandUpgrade islandUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island.get(), "mobDropMultiplier");
-            int mobDropMultiplier = IridiumSkyblock.getInstance().getUpgrades().mobDropMultiplierUpgrade.upgrades.get(islandUpgrade.getLevel()).amount;
-            if(OutpostAPI.isActive(player)) {
-                mobDropMultiplier++;
-                event.setDroppedExp(event.getDroppedExp() * 2);
-            }
-
-            if(mobDropMultiplier > 1) {
-                List<ItemStack> drops = new ArrayList(event.getDrops());
-                event.getDrops().clear();
-                int finalMobDropMultiplier = mobDropMultiplier;
-                drops.forEach(drop -> {
-                    ItemStack dropClone = drop.clone();
-                    dropClone.setAmount(dropClone.getAmount() * finalMobDropMultiplier);
-                    event.getDrops().add(dropClone);
-                });
-            }
+            //mob drop multiplier in js script
         });
     }
 

@@ -24,9 +24,11 @@ repositories {
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains:annotations:22.0.0")
-    implementation("com.iridium:IridiumCore:1.5.0")
+    implementation(files("../OPBlocks/lib/IridiumCore-1.5.0.jar"))
+    implementation(files("../OPBlocks/lib/Crunch-1.0.0.jar"))
+    //implementation("com.iridium:IridiumCore:1.5.0")
     implementation("org.bstats:bstats-bukkit:2.2.1")
-    implementation("com.github.Redempt:Crunch:1.0.0")
+    //implementation("com.github.Redempt:Crunch:1.0.0")
     implementation("com.j256.ormlite:ormlite-core:5.7")
     implementation("com.j256.ormlite:ormlite-jdbc:5.7")
     implementation("de.jeff_media:SpigotUpdateChecker:1.3.0")
@@ -48,17 +50,17 @@ dependencies {
     compileOnly("com.sk89q:WorldEdit:7.2.6")
 
     compileOnly(files("../OPBlocks/lib/CurrenciesAPI.jar"))
-    compileOnly(files("../OPBlocks/lib/OPCore-v1.16.jar"))
+    compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))
     compileOnly(files("../OPBlocks/lib/Outposts.jar"))
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.22")
 
     // Test dependencies
-    testImplementation(platform("org.junit:junit-bom:5.7.0"))
+    /*testImplementation(platform("org.junit:junit-bom:5.7.0"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("org.mockito:mockito-inline:4.1.0")
-    testImplementation("com.github.seeseemelk:MockBukkit-v1.18:1.15.0")
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.18:1.15.0")*/
 }
 
 tasks {
@@ -98,9 +100,9 @@ tasks {
         outputs.upToDateWhen { false }
     }
 
-    test {
+    /*test {
         useJUnitPlatform()
-    }
+    }*/
 }
 
 // Set the Java version and vendor
