@@ -4,6 +4,7 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.SettingType;
 import com.iridium.iridiumskyblock.database.IslandSetting;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,11 +18,16 @@ public class EntitySpawnListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent event) {
         IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(event.getLocation()).ifPresent(island -> {
             IslandSetting mobSpawnSetting = IridiumSkyblock.getInstance().getIslandManager().getIslandSetting(island, SettingType.MOB_SPAWN);
-            if (!mobSpawnSetting.getBooleanValue() && event.getEntity() instanceof LivingEntity) {
-                event.setCancelled(true);
-                return;
+            boolean is_living = event.getEntity() instanceof LivingEntity && event.getEntityType() != EntityType.ARMOR_STAND;
+            if (is_living) {
+                if (!mobSpawnSetting.getBooleanValue()) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                // ? why is living not checked
+                event.getEntity().setMetadata("island_spawned", new FixedMetadataValue(IridiumSkyblock.getInstance(), island.getId()));
             }
-            event.getEntity().setMetadata("island_spawned", new FixedMetadataValue(IridiumSkyblock.getInstance(), island.getId()));
         });
     }
 

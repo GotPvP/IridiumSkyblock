@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -58,4 +60,8 @@ public class EntityDeathListener implements Listener {
         });
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void monitorEntityDeathFinal(EntityDeathEvent event) {
+        event.getEntity().removeMetadata("island_spawned", IridiumSkyblock.getInstance());
+    }
 }
