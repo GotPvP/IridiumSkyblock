@@ -150,6 +150,8 @@ public class Inventories {
 
     public NoItemGUI boostersGUI = new NoItemGUI(27, "&7Island Boosters", background2);
 
+    public NoItemGUI islandRegenConfirmGUI = new NoItemGUI(27, "&7Confirm Island Regen", background2);
+
     public SingleItemGUI warpsGUI = new SingleItemGUI(27, "&7%island_name%'s Island Warps", background2, new Item(
             XMaterial.GREEN_STAINED_GLASS_PANE, 1, "&b&l%warp_name%",
             Arrays.asList(

@@ -265,7 +265,8 @@ public class IridiumSkyblockAPI {
      * @since 3.0.7
      */
     public boolean isIslandWorld(World world) {
-        return Objects.equals(getWorld(), world) || Objects.equals(getNetherWorld(), world) || Objects.equals(getEndWorld(), world);
+        //return Objects.equals(getWorld(), world) || Objects.equals(getNetherWorld(), world) || Objects.equals(getEndWorld(), world);
+        return Objects.equals(getWorld(), world);
     }
 
     public boolean isIslandOverWorld(World world) {

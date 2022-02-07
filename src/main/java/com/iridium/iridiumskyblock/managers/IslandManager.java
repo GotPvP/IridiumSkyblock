@@ -1,5 +1,6 @@
 package com.iridium.iridiumskyblock.managers;
 
+import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -94,12 +95,12 @@ public class IslandManager {
         World.Environment environment = xBiome.getEnvironment();
         World world;
         switch (environment) {
-            case NETHER:
+            /*case NETHER:
                 world = getNetherWorld();
                 break;
             case THE_END:
                 world = getEndWorld();
-                break;
+                break;*/
             default:
                 world = getWorld();
                 break;
@@ -245,14 +246,14 @@ public class IslandManager {
             for (int x = island.getPos1(getWorld()).getBlockX(); x <= island.getPos2(getWorld()).getBlockX(); x++) {
                 for (int z = island.getPos1(getWorld()).getBlockZ(); z <= island.getPos2(getWorld()).getBlockZ(); z++) {
                     oceanGenerator.generateWater(getWorld(), x, z);
-                    oceanGenerator.generateWater(getNetherWorld(), x, z);
-                    oceanGenerator.generateWater(getEndWorld(), x, z);
+                    //oceanGenerator.generateWater(getNetherWorld(), x, z);
+                    //oceanGenerator.generateWater(getEndWorld(), x, z);
                 }
             }
         } else {
             deleteIslandBlocks(island, getWorld(), 0).join();
-            deleteIslandBlocks(island, getNetherWorld(), 0).join();
-            deleteIslandBlocks(island, getEndWorld(), 0).join();
+            //deleteIslandBlocks(island, getNetherWorld(), 0).join();
+            //deleteIslandBlocks(island, getEndWorld(), 0).join();
         }
         IslandRegenSettings regenSettings = IridiumSkyblock.getInstance().getConfiguration().regenSettings;
         getIslandMembers(island).stream().map(User::getPlayer).forEach(player -> {
@@ -319,7 +320,8 @@ public class IslandManager {
             islandHome.setYaw(schematicConfig.yawHome);
             island.setHome(islandHome);
 
-            getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
+            //getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
+            getEntities(island, getWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
                         for (Entity entity : entities) {
                             if (entity instanceof Player) {
                                 teleportHome((Player) entity, island, 0);
@@ -338,8 +340,8 @@ public class IslandManager {
         setIslandBiome(island, schematicConfig.end.biome);
         return IridiumSkyblock.getInstance().getSchematicManager().pasteSchematic(island, ImmutableMap.<World, Schematics.SchematicWorld>builder()
                 .put(getWorld(), schematicConfig.overworld)
-                .put(getNetherWorld(), schematicConfig.nether)
-                .put(getEndWorld(), schematicConfig.end)
+                //.put(getNetherWorld(), schematicConfig.nether)
+                //.put(getEndWorld(), schematicConfig.end)
                 .build()
         );
     }
@@ -460,11 +462,11 @@ public class IslandManager {
 
 
     private static LoadingCache<BlockPosition, Optional<Island>> islandCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.MINUTES).build(
-            new CacheLoader<BlockPosition, Optional<Island>>() {
+            new CacheLoader<>() {
                 @Override
                 public Optional<Island> load(BlockPosition blockPosition) {
-                    for(Island island : IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries()) {
-                        if(island.isInIsland(blockPosition.getX(), blockPosition.getZ())) {
+                    for (Island island : IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries()) {
+                        if (island.isInIslandChunk(blockPosition.getX(), blockPosition.getZ())) {
                             return Optional.of(island);
                         }
                     }
@@ -481,7 +483,9 @@ public class IslandManager {
     public @NotNull Optional<Island> getIslandViaLocation(@NotNull Location location) {
         if (!IridiumSkyblockAPI.getInstance().isIslandWorld(location.getWorld())) return Optional.empty();
 
-        return islandCache.getUnchecked(new BlockPosition(location.getBlockX(), location.getBlockZ()));
+        //return islandCache.getUnchecked(new BlockPosition(location.getBlockX(), location.getBlockZ()));
+        return islandCache.getUnchecked(new BlockPosition(location.getChunk().getX(), location.getChunk().getZ()));
+        //return islandCache.getUnchecked(location.getChunk().getX() + "/" + location.getChunk().getZ());
         //return IridiumSkyblock.getInstance().getDatabaseManager().getIslandTableManager().getEntries().stream().filter(island -> island.get island.isInIsland(location)).findFirst();
     }
 
@@ -696,8 +700,8 @@ public class IslandManager {
         if (islandDeleteEvent.isCancelled()) return;
         clearIslandCache();
         deleteIslandBlocks(island, getWorld(), 3);
-        deleteIslandBlocks(island, getNetherWorld(), 3);
-        deleteIslandBlocks(island, getEndWorld(), 3);
+        //deleteIslandBlocks(island, getNetherWorld(), 3);
+        //deleteIslandBlocks(island, getEndWorld(), 3);
         deleteIslanDatabasedEntries(island);
 
         getIslandMembers(island).stream().map(User::getPlayer).forEach(player -> {
@@ -714,7 +718,8 @@ public class IslandManager {
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().islandDeleted.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
             }
         });
-        getEntities(island, getWorld(), getEndWorld(), getNetherWorld()).thenAccept(entities ->
+        //getEntities(island, getWorld(), getEndWorld(), getNetherWorld()).thenAccept(entities ->
+        getEntities(island, getWorld()).thenAccept(entities ->
                 Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () ->
                         entities.stream()
                                 .filter(entity -> entity instanceof Player)
@@ -722,6 +727,19 @@ public class IslandManager {
                                 .forEach(PlayerUtils::teleportSpawn)
                 )
         );
+
+        Location pos1 = island.getPos1(null);
+        Location pos2 = island.getPos2(null);
+        int pos1X = pos1.getBlockX() >> 4;
+        int pos1Z = pos1.getBlockZ() >> 4;
+        int pos2X = pos2.getBlockX() >> 4;
+        int pos2Z = pos2.getBlockZ() >> 4;
+
+        for(int x = pos1X; x < pos2X; x++) {
+            for(int z = pos1Z; z < pos2Z; z++) {
+                islandCache.invalidate(new BlockPosition(x, z));
+            }
+        }
     }
 
     /**
@@ -853,7 +871,8 @@ public class IslandManager {
      * @param island The specified Island
      */
     public void recalculateIsland(@NotNull Island island) {
-        getIslandChunks(island, getWorld(), getNetherWorld(), getEndWorld()).thenAcceptAsync(chunks -> {
+        //getIslandChunks(island, getWorld(), getNetherWorld(), getEndWorld()).thenAcceptAsync(chunks -> {
+        getIslandChunks(island, getWorld()).thenAcceptAsync(chunks -> {
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandBlocksTableManager().getEntries(island).forEach(islandBlocks -> islandBlocks.setAmount(0));
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandSpawnersTableManager().getEntries(island).forEach(islandSpawners -> islandSpawners.setAmount(0));
 
@@ -886,6 +905,15 @@ public class IslandManager {
                 }
             }
         });
+
+        if (!Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> getAllTileInIsland(island, chunks));
+        } else {
+            getAllTileInIsland(island, chunks);
+        }
+    }
+
+    private void getAllTileInIsland(Island island, List<Chunk> chunks) {
         chunks.forEach(chunk -> {
             for (BlockState blockState : chunk.getTileEntities()) {
                 if (!(blockState instanceof CreatureSpawner)) continue;
@@ -974,7 +1002,8 @@ public class IslandManager {
      * @param island The specified Island
      */
     public void sendIslandBorder(@NotNull Island island) {
-        getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> {
+        //getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> {
+        getEntities(island, getWorld()).thenAccept(entities -> {
             for (Entity entity : entities) {
                 if (entity instanceof Player) {
                     PlayerUtils.sendBorder((Player) entity, island);
@@ -1045,11 +1074,13 @@ public class IslandManager {
     }
 
     public boolean isIslandNether(World world) {
-        return world.equals(getNetherWorld());
+        //return world.equals(getNetherWorld());
+        return false;
     }
 
     public boolean isIslandEnd(World world) {
-        return world.equals(getEndWorld());
+        //return world.equals(getEndWorld());
+        return false;
     }
 
     public ItemStack getIslandCrystal(int amount) {

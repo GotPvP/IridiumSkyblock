@@ -17,4 +17,18 @@ public class BlockPosition {
     public int getX() {
         return x;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BlockPosition blockPosition) {
+            return x == blockPosition.getX() && z == blockPosition.getZ();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return (Integer.valueOf(x).hashCode() >> 13) ^ Integer.valueOf(z).hashCode();
+    }
 }

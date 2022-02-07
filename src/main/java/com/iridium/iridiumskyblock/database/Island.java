@@ -13,6 +13,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -298,6 +299,7 @@ public final class Island extends DatabaseObject {
     public void setSizeAddon(int size) {
         this.sizeAddon = size;
         resetCache();
+        setChanged(true);
     }
 
     /**
@@ -389,7 +391,8 @@ public final class Island extends DatabaseObject {
     public boolean isInIsland(@NotNull Location location) {
         IslandManager islandManager = IridiumSkyblock.getInstance().getIslandManager();
         World world = location.getWorld();
-        if (Objects.equals(world, islandManager.getWorld()) || Objects.equals(world, islandManager.getNetherWorld()) || Objects.equals(world, islandManager.getEndWorld())) {
+        //if (Objects.equals(world, islandManager.getWorld()) || Objects.equals(world, islandManager.getNetherWorld()) || Objects.equals(world, islandManager.getEndWorld())) {
+        if (Objects.equals(world, islandManager.getWorld())) {
             return isInIsland(location.getBlockX(), location.getBlockZ());
         } else {
             return false;
@@ -408,6 +411,24 @@ public final class Island extends DatabaseObject {
         Location pos2 = getPos2(null);
 
         return pos1.getX() <= x && pos1.getZ() <= z && pos2.getX() >= x && pos2.getZ() >= z;
+    }
+
+    /**
+     * Returns if the provided chunk x and chunk z coordinates are inside this Island or not. (not exact)
+     *
+     * @param x The chunk x coordinates
+     * @param z The chunk z coordinates
+     * @return Whether or not the coordinates are in this island
+     */
+    public boolean isInIslandChunk(int x, int z) {
+        Location pos1 = getPos1(null);
+        Location pos2 = getPos2(null);
+        int pos1X = pos1.getBlockX() >> 4;
+        int pos1Z = pos1.getBlockZ() >> 4;
+        int pos2X = pos2.getBlockX() >> 4;
+        int pos2Z = pos2.getBlockZ() >> 4;
+
+        return pos1X <= x && pos1Z <= z && pos2X >= x && pos2Z >= z;
     }
 
     /**

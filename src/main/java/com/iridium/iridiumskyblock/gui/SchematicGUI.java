@@ -48,7 +48,6 @@ public abstract class SchematicGUI extends GUI {
     public void onInventoryClick(InventoryClickEvent event) {
         if (!schematics.containsKey(event.getSlot())) return;
         selectSchematic(schematics.get(event.getSlot()));
-        event.getWhoClicked().closeInventory();
     }
 
     /**

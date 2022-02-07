@@ -43,4 +43,9 @@ public class EntityDeathListener implements Listener {
         });
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void monitorEntityDeathFinal(EntityDeathEvent event) {
+        event.getEntity().removeMetadata("island_spawned", IridiumSkyblock.getInstance());
+    }
+
 }

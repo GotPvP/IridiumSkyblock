@@ -74,10 +74,10 @@ public class IslandBankGUI extends IslandGUI {
                         Bukkit.getScheduler().scheduleSyncDelayedTask(IridiumSkyblock.getInstance(), () -> Bukkit.getServer().dispatchCommand(event.getWhoClicked(), "is " + IridiumSkyblock.getInstance().getCommands().withdrawCommand.aliases.get(0) + " " + bankItem.get().getName() + " " + lines[0]));
                     }
                 });
-                IridiumSkyblock.getInstance().getCommands().withdrawCommand.execute(event.getWhoClicked(), new String[]{"", bankItem.get().getName(), String.valueOf(bankItem.get().getDefaultAmount())});
+                //IridiumSkyblock.getInstance().getCommands().withdrawCommand.execute(event.getWhoClicked(), new String[]{"", bankItem.get().getName(), String.valueOf(bankItem.get().getDefaultAmount())});
                 break;
             case RIGHT:
-                IridiumSkyblock.getInstance().getCommands().depositCommand.execute(event.getWhoClicked(), new String[]{"", bankItem.get().getName(), String.valueOf(bankItem.get().getDefaultAmount())});
+                //IridiumSkyblock.getInstance().getCommands().depositCommand.execute(event.getWhoClicked(), new String[]{"", bankItem.get().getName(), String.valueOf(bankItem.get().getDefaultAmount())});
                 player.closeInventory();
                 SignContainer.openGUIFor(player, "", "^^^^^^^^^^^^^^^^", "Enter the", "deposit amount", new SignContainer.SignGUIListener() {
                     @Override

@@ -27,15 +27,15 @@ public class BlockGrowListener implements Listener {
                 IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(event.getBlock().getLocation()).ifPresent(island -> {
                     XMaterial material = XMaterial.matchXMaterial(event.getBlock().getType());
                     if (event.getNewState().getBlock().getBlockData() instanceof Ageable) {
-                        IslandBooster islandBooster = IridiumSkyblock.getInstance().getIslandManager().getIslandBooster(island, "farming");
+                        //IslandBooster islandBooster = IridiumSkyblock.getInstance().getIslandManager().getIslandBooster(island, "farming");
                         Ageable ageable = (Ageable) event.getNewState().getBlock().getBlockData();
-                        if (islandBooster.isActive()) {
+                        /*if (islandBooster.isActive()) {
                             ageable.setAge(Math.min(ageable.getAge() + 1, ageable.getMaximumAge()));
                             event.getNewState().getBlock().setBlockData(ageable);
                         }
                         if (ageable.getAge() == ageable.getMaximumAge() || instantGrowCrops.contains(XMaterial.matchXMaterial(event.getNewState().getType()))) {
                             IridiumSkyblock.getInstance().getMissionManager().handleMissionUpdates(island, "GROW", material.name(), 1);
-                        }
+                        }*/
 
                         if(ageable.getAge() != ageable.getMaximumAge()) {
                             IslandUpgrade islandUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "cropSpeed");
@@ -46,7 +46,7 @@ public class BlockGrowListener implements Listener {
                             }
                         }
                     } else {
-                        IridiumSkyblock.getInstance().getMissionManager().handleMissionUpdates(island, "GROW", material.name(), 1);
+                        //IridiumSkyblock.getInstance().getMissionManager().handleMissionUpdates(island, "GROW", material.name(), 1);
                     }
                 })
         );

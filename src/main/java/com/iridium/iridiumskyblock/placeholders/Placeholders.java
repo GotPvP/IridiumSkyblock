@@ -95,7 +95,7 @@ public class Placeholders {
                                 .map(biome -> WordUtils.capitalizeFully(biome.name().toLowerCase().replace("_", " ")))
                                 .orElse(placeholdersConfig.islandBiome)
                 )
-                .put(startKey + "_nether_biome", player ->
+                /*.put(startKey + "_nether_biome", player ->
                         islandGetter.getIsland(player)
                                 .map(island -> island.getCenter(IridiumSkyblock.getInstance().getIslandManager().getNetherWorld()).getBlock())
                                 .map(Block::getBiome)
@@ -108,7 +108,7 @@ public class Placeholders {
                                 .map(Block::getBiome)
                                 .map(biome -> WordUtils.capitalizeFully(biome.name().toLowerCase().replace("_", " ")))
                                 .orElse(placeholdersConfig.islandBiome)
-                )
+                )*/
 
                 // Island Bank Placeholders
                 .put(startKey + "_bank_experience", player ->

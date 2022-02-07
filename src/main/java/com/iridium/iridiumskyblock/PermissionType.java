@@ -34,7 +34,8 @@ public enum PermissionType {
     TRAMPLE_CROPS("trampleCrops"),
     INTERACT("interact"),
     PORTAL("portal"),
-    ISLAND_SETTINGS("island_settings");
+    ISLAND_SETTINGS("island_settings"),
+    ENDER_PEARL("ender_pearl");
 
     private final String permissionKey;
 }

@@ -49,9 +49,10 @@ dependencies {
     compileOnly("com.songoda:EpicSpawners:7.0.8")
     compileOnly("com.sk89q:WorldEdit:7.2.6")
 
-    compileOnly(files("../OPBlocks/lib/CurrenciesAPI.jar"))
+    compileOnly(files("../OPBlocks/lib/CurrenciesAPI-MultiBridge.jar"))
     compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))
     compileOnly(files("../OPBlocks/lib/Outposts.jar"))
+    compileOnly(files("../OPBlocks/lib/ArkJs-v1.16.jar"))
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.22")
@@ -108,7 +109,7 @@ tasks {
 // Set the Java version and vendor
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(16))
         vendor.set(JvmVendorSpec.ADOPTOPENJDK)
     }
 }

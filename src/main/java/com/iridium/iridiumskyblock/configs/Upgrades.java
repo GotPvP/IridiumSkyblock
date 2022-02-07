@@ -310,29 +310,31 @@ public class Upgrades {
                     "&b&l • &7Upgrade Cost: &e%mobcoinscost% Mob Coins",
                     "",
                     "&b&lLevels:",
-                    "&b&l • &7Level 1: &b10% Increase",
-                    "&b&l • &7Level 2: &b20% Increase",
-                    "&b&l • &7Level 3: &b30% Increase",
-                    "&b&l • &7Level 4: &b40% Increase",
-                    "&b&l • &7Level 5: &b50% Increase",
-                    "&b&l • &7Level 6: &b60% Increase",
-                    "&b&l • &7Level 7: &b70% Increase",
-                    "&b&l • &7Level 8: &b80% Increase",
-                    "&b&l • &7Level 9: &b90% Increase",
-                    "&b&l • &7Level 10: &b100% Increase",
+                    "&b&l • &7Level 1: &b0% Increase",
+                    "&b&l • &7Level 2: &b10% Increase",
+                    "&b&l • &7Level 3: &b20% Increase",
+                    "&b&l • &7Level 4: &b30% Increase",
+                    "&b&l • &7Level 5: &b40% Increase",
+                    "&b&l • &7Level 6: &b50% Increase",
+                    "&b&l • &7Level 7: &b60% Increase",
+                    "&b&l • &7Level 8: &b70% Increase",
+                    "&b&l • &7Level 9: &b80% Increase",
+                    "&b&l • &7Level 10: &b90% Increase",
+                    "&b&l • &7Level 11: &b100% Increase",
                     "",
                     "&b&l[!] &bClick to Purchase this Upgrade"
             )), ImmutableMap.<Integer, CropSpeedUpgrade>builder()
-            .put(1, new CropSpeedUpgrade(0, 0, 1200, 0, 10))
-            .put(2, new CropSpeedUpgrade(0, 0, 10500, 0, 20))
-            .put(3, new CropSpeedUpgrade(0, 0, 32000, 0, 30))
-            .put(4, new CropSpeedUpgrade(0, 0, 90000, 0, 40))
-            .put(5, new CropSpeedUpgrade(0, 0, 200000, 0, 50))
-            .put(6, new CropSpeedUpgrade(0, 0, 300000, 1, 60))
-            .put(7, new CropSpeedUpgrade(0, 0, 400000, 2, 70))
-            .put(8, new CropSpeedUpgrade(0, 0, 500000, 3, 80))
-            .put(9, new CropSpeedUpgrade(0, 0, 750000, 4, 90))
-            .put(10, new CropSpeedUpgrade(0, 0, 1000000, 5, 100))
+            .put(1, new CropSpeedUpgrade(0, 0, 0, 0, 0))
+            .put(2, new CropSpeedUpgrade(0, 0, 1200, 0, 10))
+            .put(3, new CropSpeedUpgrade(0, 0, 10500, 0, 20))
+            .put(4, new CropSpeedUpgrade(0, 0, 32000, 0, 30))
+            .put(5, new CropSpeedUpgrade(0, 0, 90000, 0, 40))
+            .put(6, new CropSpeedUpgrade(0, 0, 200000, 0, 50))
+            .put(7, new CropSpeedUpgrade(0, 0, 300000, 1, 60))
+            .put(8, new CropSpeedUpgrade(0, 0, 400000, 2, 70))
+            .put(9, new CropSpeedUpgrade(0, 0, 500000, 3, 80))
+            .put(10, new CropSpeedUpgrade(0, 0, 750000, 4, 90))
+            .put(11, new CropSpeedUpgrade(0, 0, 1000000, 5, 100))
             .build());
 
     public Upgrade<MobDropMultiplierUpgrade> mobDropMultiplierUpgrade = new Upgrade<>(true, "Mob Drop Mutliplier",
@@ -468,11 +470,11 @@ public class Upgrades {
                     "&b&l • &7Level 4: &b3%",
                     "&b&l • &7Level 5: &b4%",
                     "&b&l • &7Level 6: &b5%",
-                    "&b&l • &7Level 6: &b6%",
-                    "&b&l • &7Level 6: &b7%",
-                    "&b&l • &7Level 6: &b8%",
-                    "&b&l • &7Level 6: &b9%",
-                    "&b&l • &7Level 6: &b10%",
+                    "&b&l • &7Level 7: &b6%",
+                    "&b&l • &7Level 8: &b7%",
+                    "&b&l • &7Level 9: &b8%",
+                    "&b&l • &7Level 10: &b9%",
+                    "&b&l • &7Level 11: &b10%",
                     "",
                     "&b&l[!] &bClick to Purchase this Upgrade"
             )), ImmutableMap.<Integer, EnchantSuccessChanceUpgrade>builder()
@@ -506,11 +508,11 @@ public class Upgrades {
                     "&b&l • &7Level 4: &b3%",
                     "&b&l • &7Level 5: &b4%",
                     "&b&l • &7Level 6: &b5%",
-                    "&b&l • &7Level 6: &b6%",
-                    "&b&l • &7Level 6: &b7%",
-                    "&b&l • &7Level 6: &b8%",
-                    "&b&l • &7Level 6: &b9%",
-                    "&b&l • &7Level 6: &b10%",
+                    "&b&l • &7Level 7: &b6%",
+                    "&b&l • &7Level 8: &b7%",
+                    "&b&l • &7Level 9: &b8%",
+                    "&b&l • &7Level 10: &b9%",
+                    "&b&l • &7Level 11: &b10%",
                     "",
                     "&b&l[!] &bClick to Purchase this Upgrade"
             )), ImmutableMap.<Integer, EnchantSuccessChanceUpgrade>builder()
@@ -525,5 +527,36 @@ public class Upgrades {
             .put(9, new EnchantSuccessChanceUpgrade(0, 0, 1000000, 0, 8))
             .put(10, new EnchantSuccessChanceUpgrade(0, 0, 1250000, 0, 9))
             .put(11, new EnchantSuccessChanceUpgrade(0, 0, 1500000, 0, 10))
+            .build());
+
+    public Upgrade<BeaconUpgrade> beaconUpgrade = new Upgrade<>(true, "Beacon",
+            new Item(XMaterial.BEACON, 32, 1, "&b&lIsland Beacon", Arrays.asList(
+                    "",
+                    "&7Want the effects from a beacon? Buy this",
+                    "&7upgrade to receive beacon effects!",
+                    "",
+                    "&b&lInformation:",
+                    "&b&l • &7Current Level: &b%level%",
+                    "&b&l • &7Upgrade Cost: &e%mobcoinscost% Mob Coins",
+                    "&b&l • &7Upgrade Cost: &a$%vaultcost%",
+                    "",
+                    "&b&lLevels:",
+                    "&b&l • &7Level 1: &bNothing",
+                    "&b&l • &7Level 2: &bSpeed II",
+                    "&b&l • &7Level 3: &bHaste II",
+                    "&b&l • &7Level 4: &bResistance II",
+                    "&b&l • &7Level 5: &bJump Boost II",
+                    "&b&l • &7Level 6: &bStrength II",
+                    "&b&l • &7Level 7: &bRegeneration II",
+                    "",
+                    "&b&l[!] &bClick to Purchase this Upgrade"
+            )), ImmutableMap.<Integer, BeaconUpgrade>builder()
+            .put(1, new BeaconUpgrade(0, 0, 0, 0))
+            .put(2, new BeaconUpgrade(100000, 0, 15000, 0))
+            .put(3, new BeaconUpgrade(250000, 0, 45000, 0))
+            .put(4, new BeaconUpgrade(500000, 0, 100000, 0))
+            .put(5, new BeaconUpgrade(1000000, 0, 250000, 0))
+            .put(6, new BeaconUpgrade(2500000, 0, 500000, 0))
+            .put(7, new BeaconUpgrade(5000000, 0, 1000000, 0))
             .build());
 }

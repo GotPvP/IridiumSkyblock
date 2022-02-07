@@ -8,6 +8,7 @@ import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.database.IslandBank;
 import com.iridium.iridiumskyblock.database.User;
 import com.iridium.iridiumskyblock.managers.CooldownProvider;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,6 +59,20 @@ public class PlayerInteractListener implements Listener {
                 }
             }
         });
+
+        if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if(player.getInventory().getItemInMainHand().getType() == Material.ENDER_PEARL) {
+                IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(player.getLocation()).ifPresent(island -> {
+                    if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island, user, PermissionType.ENDER_PEARL)) {
+                        event.setCancelled(true);
+                        if (hasNoCooldown(player)) {
+                            player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotThrowEnderPearl.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+                        }
+                    }
+                });
+            }
+        }
+
         if (event.getClickedBlock() == null) return;
         IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(event.getClickedBlock().getLocation()).ifPresent(island -> {
 
@@ -69,6 +84,7 @@ public class PlayerInteractListener implements Listener {
                 if (hasNoCooldown(player)) {
                     player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotInteract.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
                 }
+                return;
             }
 
             if (event.getAction() == Action.PHYSICAL && material == XMaterial.FARMLAND) {

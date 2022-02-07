@@ -36,6 +36,7 @@ public class IslandCreateGUI extends SchematicGUI {
     @Override
     public void selectSchematic(Map.Entry<String, Schematics.SchematicConfig> schematicConfig) {
         IridiumSkyblock.getInstance().getCommands().createCommand.execute(player, new String[]{"create", islandName, schematicConfig.getKey()});
+        player.closeInventory();
     }
 
 }

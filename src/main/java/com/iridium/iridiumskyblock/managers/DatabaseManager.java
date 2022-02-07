@@ -14,6 +14,7 @@ import com.j256.ormlite.jdbc.db.DatabaseTypeUtils;
 import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.logger.NullLogBackend;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -90,6 +91,7 @@ public class DatabaseManager {
         this.islandLogTableManager = new ForeignIslandTableManager<>(connectionSource, IslandLog.class, Comparator.comparing(IslandLog::getIslandId));
         this.islandBanTableManager = new ForeignIslandTableManager<>(connectionSource, IslandBan.class, Comparator.comparing(IslandBan::getIslandId).thenComparing(islandBan -> islandBan.getBannedUser().getUuid()));
         this.islandSettingTableManager = new ForeignIslandTableManager<>(connectionSource, IslandSetting.class, Comparator.comparing(IslandSetting::getIslandId).thenComparing(IslandSetting::getSetting));
+
     }
 
     /**
@@ -110,6 +112,7 @@ public class DatabaseManager {
 
     private void convertDatabaseData(SQL.Driver driver) {
         Path versionFile = Paths.get("plugins", "IridiumSkyblock", "sql_version.txt");
+
         try {
             Files.write(versionFile, Collections.singleton(String.valueOf(version)), StandardOpenOption.CREATE_NEW);
             DataConverter.updateDatabaseData(1, version, connectionSource, driver);

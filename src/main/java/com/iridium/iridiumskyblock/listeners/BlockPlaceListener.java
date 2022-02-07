@@ -30,7 +30,8 @@ public class BlockPlaceListener implements Listener {
         Optional<Island> island = IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(event.getBlock().getLocation());
         if (!island.isPresent()) {
             World world = event.getBlock().getLocation().getWorld();
-            if (Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getWorld()) || Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getNetherWorld()) || Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getEndWorld())) {
+            //if (Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getWorld()) || Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getNetherWorld()) || Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getEndWorld())) {
+            if (Objects.equals(world, IridiumSkyblock.getInstance().getIslandManager().getWorld())) {
                 if (!user.isBypassing()) event.setCancelled(true);
             }
             return;
@@ -44,9 +45,9 @@ public class BlockPlaceListener implements Listener {
         }
 
         int limitUpgradeLevel = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island.get(), "blocklimit").getLevel();
-        int blockLimit = IridiumSkyblock.getInstance().getUpgrades().blockLimitUpgrade.upgrades.get(limitUpgradeLevel).limits.getOrDefault(material, 0);
+        int blockLimit = IridiumSkyblock.getInstance().getUpgrades().blockLimitUpgrade.upgrades.get(limitUpgradeLevel).limits.getOrDefault(material, -1);
 
-        if (blockLimit > 0 && IridiumSkyblock.getInstance().getIslandManager().getIslandBlockAmount(island.get(), material) >= blockLimit) {
+        if (blockLimit >= 0 && IridiumSkyblock.getInstance().getIslandManager().getIslandBlockAmount(island.get(), material) >= blockLimit) {
             player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().blockLimitReached
                     .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix).replace("%limit%", String.valueOf(blockLimit)).replace("%block%", WordUtils.capitalizeFully(material.name().toLowerCase().replace("_", " ")))));
             event.setCancelled(true);

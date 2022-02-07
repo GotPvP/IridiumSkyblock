@@ -48,7 +48,7 @@ public class MobCoinsBankItem extends BankItem {
             double mobcoins = Math.min(amount.doubleValue(), islandBank.getNumber());
             if (mobcoins > 0) {
                 islandBank.setNumber(islandBank.getNumber() - mobcoins);
-                CurrenciesAPI.getInstance().give("mobcoins", player, mobcoins);
+                CurrenciesAPI.getInstance().give("mobcoins", player, mobcoins, "Island Bank Withdraw");
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankWithdrew
                         .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
                         .replace("%amount%", String.valueOf(mobcoins))
@@ -82,9 +82,9 @@ public class MobCoinsBankItem extends BankItem {
 
         if (island.isPresent()) {
             IslandBank islandBank = IridiumSkyblock.getInstance().getIslandManager().getIslandBank(island.get(), this);
-            double mobcoins = CurrenciesAPI.getInstance().get("mobcoins", player);
+            double mobcoins = CurrenciesAPI.getInstance().getSync("mobcoins", player);
             if (mobcoins > amount.doubleValue()) {
-                CurrenciesAPI.getInstance().take("mobcoins", player, amount.doubleValue());
+                CurrenciesAPI.getInstance().take("mobcoins", player, amount.doubleValue(), "Island Bank Deposit");
                 islandBank.setNumber(islandBank.getNumber() + amount.doubleValue());
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankDeposited
                         .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))

@@ -30,6 +30,7 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
@@ -215,14 +216,49 @@ public class IridiumSkyblock extends IridiumCore {
         Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getServer().getOnlinePlayers().forEach(player -> {
             User user = IridiumSkyblock.getInstance().getUserManager().getUser(player);
             user.getIsland().ifPresent(island -> {
-                IslandUpgrade fireResistanceUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "fireResistance");
-                if(fireResistanceUpgrade.getLevel() > 1) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 160, 0));
-                }
+                if(player.getWorld() == IridiumSkyblockAPI.getInstance().getWorld()) {
+                    IslandUpgrade fireResistanceUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "fireResistance");
+                    if (fireResistanceUpgrade.getLevel() > 1) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 160, 0));
+                    }
 
-                IslandUpgrade waterBreathingUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "waterBreathing");
-                if(waterBreathingUpgrade.getLevel() > 1) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 160, 0));
+                    IslandUpgrade waterBreathingUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "waterBreathing");
+                    if (waterBreathingUpgrade.getLevel() > 1) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 160, 0));
+                    }
+
+                    // Moved to js script
+                    /*IslandUpgrade beaconUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "beacon");
+                    if (beaconUpgrade.getLevel() > 1) {
+                        if (beaconUpgrade.getLevel() == 2) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1));
+                        } else if (beaconUpgrade.getLevel() == 3) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.FAST_DIGGING, 160, 1));
+                        } else if (beaconUpgrade.getLevel() == 4) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.FAST_DIGGING, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 1));
+                        } else if (beaconUpgrade.getLevel() == 5) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1).);
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.FAST_DIGGING, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.JUMP, 160, 1));
+                        } else if (beaconUpgrade.getLevel() == 6) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.FAST_DIGGING, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.JUMP, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 160, 1));
+                        } else if (beaconUpgrade.getLevel() == 7) {
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.SPEED, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.FAST_DIGGING, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.JUMP, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 160, 1));
+                            addPotionEffect(player, new PotionEffect(PotionEffectType.REGENERATION, 160, 1));
+                        }
+                    }*/
                 }
             });
         }), 0, 100);
@@ -230,8 +266,8 @@ public class IridiumSkyblock extends IridiumCore {
         // Register worlds with multiverse
         Bukkit.getScheduler().runTaskLater(this, () -> {
             registerMultiverse(islandManager.getWorld());
-            registerMultiverse(islandManager.getNetherWorld());
-            registerMultiverse(islandManager.getEndWorld());
+            //registerMultiverse(islandManager.getNetherWorld());
+            //registerMultiverse(islandManager.getEndWorld());
         }, 1);
 
         resetIslandMissions();
@@ -467,6 +503,7 @@ public class IridiumSkyblock extends IridiumCore {
         if (upgrades.autoSellChestUpgrade.name == null) upgrades.autoSellChestUpgrade.name = "AutoSell Chest";
         if (upgrades.enchantSuccessChanceUpgrade.name == null) upgrades.enchantSuccessChanceUpgrade.name = "Enchant Success Chance";
         if (upgrades.enchantFailureChanceUpgrade.name == null) upgrades.enchantFailureChanceUpgrade.name = "Enchant Failure chance";
+        if (upgrades.beaconUpgrade.name == null) upgrades.beaconUpgrade.name = "Beacon";
 
         this.bankItemList = new ArrayList<>();
         if (bankItems.crystalsBankItem.isEnabled()) {
@@ -530,6 +567,9 @@ public class IridiumSkyblock extends IridiumCore {
         }
         if (upgrades.enchantFailureChanceUpgrade.enabled) {
             upgradesList.put("enchantFailureChance", upgrades.enchantFailureChanceUpgrade);
+        }
+        if (upgrades.beaconUpgrade.enabled) {
+            upgradesList.put("beacon", upgrades.beaconUpgrade);
         }
 
         this.boosterList = new HashMap<>();
@@ -605,6 +645,7 @@ public class IridiumSkyblock extends IridiumCore {
         this.permissionList.put(PermissionType.INTERACT.getPermissionKey(), permissions.interact);
         this.permissionList.put(PermissionType.PORTAL.getPermissionKey(), permissions.portal);
         this.permissionList.put(PermissionType.ISLAND_SETTINGS.getPermissionKey(), permissions.islandSettings);
+        this.permissionList.put(PermissionType.ENDER_PEARL.getPermissionKey(), permissions.enderPearl);
     }
 
     private void initializeSettingsList() {

@@ -42,11 +42,11 @@ public class PlayerPortalListener implements Listener {
         }
 
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
-            if (IridiumSkyblock.getInstance().getConfiguration().netherIslands) {
+            /*if (IridiumSkyblock.getInstance().getConfiguration().netherIslands) {
                 World world = Objects.equals(event.getFrom().getWorld(), islandManager.getNetherWorld()) ? islandManager.getWorld() : islandManager.getNetherWorld();
                 event.setTo(island.get().getCenter(world));
                 return;
-            }
+            }*/
 
             event.setCancelled(true);
             if (hasNoCooldown(event.getPlayer())) {
@@ -58,11 +58,11 @@ public class PlayerPortalListener implements Listener {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
             event.setCancelled(true);
 
-            if (IridiumSkyblock.getInstance().getConfiguration().endIslands) {
+            /*if (IridiumSkyblock.getInstance().getConfiguration().endIslands) {
                 World world = Objects.equals(event.getFrom().getWorld(), islandManager.getEndWorld()) ? islandManager.getWorld() : islandManager.getEndWorld();
                 event.getPlayer().teleport(LocationUtils.getSafeLocation(island.get().getCenter(world), island.get()));
                 return;
-            }
+            }*/
 
             if (hasNoCooldown(event.getPlayer())) {
                 event.getPlayer().sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().endIslandsDisabled.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));

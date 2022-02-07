@@ -2,6 +2,7 @@ package com.iridium.iridiumskyblock.commands;
 
 import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
+import com.iridium.iridiumskyblock.api.IslandVisitEvent;
 import com.iridium.iridiumskyblock.database.User;
 import com.iridium.iridiumskyblock.gui.VisitGUI;
 import com.iridium.iridiumskyblock.utils.PlayerUtils;
@@ -55,6 +56,7 @@ public class VisitCommand extends Command {
             return false;
         }
 
+        Bukkit.getPluginManager().callEvent(new IslandVisitEvent(user, targetUser.getIsland().get()));
         IridiumSkyblock.getInstance().getIslandManager().teleportHome(player, targetUser.getIsland().get(), IridiumSkyblock.getInstance().getConfiguration().teleportDelay);
         return true;
     }

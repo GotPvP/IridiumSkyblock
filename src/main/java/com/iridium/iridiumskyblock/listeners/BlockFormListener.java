@@ -4,6 +4,7 @@ import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.database.Island;
+import com.iridium.iridiumskyblock.database.IslandBlocks;
 import com.iridium.iridiumskyblock.upgrades.OresUpgrade;
 import com.iridium.iridiumskyblock.utils.RandomAccessList;
 import org.bukkit.Material;
@@ -54,7 +55,12 @@ public class BlockFormListener implements Listener {
 
                 Material material = xMaterialOptional.get().parseMaterial();
                 if (material == Material.COBBLESTONE && newMaterial == XMaterial.STONE) material = Material.STONE;
-                if (material != null) event.getNewState().setType(material);
+                if (material != null) {
+                    event.getNewState().setType(material);
+                    IslandBlocks islandBlocks = IridiumSkyblock.getInstance().getIslandManager().getIslandBlock(island.get(), xMaterialOptional.get());
+                    islandBlocks.setAmount(islandBlocks.getAmount() + 1);
+                }
+
             }
         }
     }

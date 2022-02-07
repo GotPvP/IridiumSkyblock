@@ -3,11 +3,13 @@ package com.iridium.iridiumskyblock.commands;
 import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.PermissionType;
+import com.iridium.iridiumskyblock.api.IslandCreateWarpEvent;
 import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.database.IslandUpgrade;
 import com.iridium.iridiumskyblock.database.IslandWarp;
 import com.iridium.iridiumskyblock.database.User;
 import com.iridium.iridiumskyblock.utils.LocationUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -80,6 +82,8 @@ public class SetWarpCommand extends Command {
         if (args.length == 3) {
             islandWarp.setPassword(args[2]);
         }
+
+        Bukkit.getPluginManager().callEvent(new IslandCreateWarpEvent(island.get(), user, islandWarp));
 
         IridiumSkyblock.getInstance().getDatabaseManager().getIslandWarpTableManager().addEntry(islandWarp);
         player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().createdWarp
