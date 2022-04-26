@@ -58,7 +58,7 @@ public class Commands {
     //public ShopCommand shopCommand = new ShopCommand();
     public SpyCommand spyCommand = new SpyCommand();
     public TopCommand topCommand = new TopCommand();
-    //public TransferCommand transferCommand = new TransferCommand();
+    public TransferCommand transferCommand = new TransferCommand();
     public TrustCommand trustCommand = new TrustCommand();
     public UnBanCommand unBanCommand = new UnBanCommand();
     public UnInviteCommand unInviteCommand = new UnInviteCommand();

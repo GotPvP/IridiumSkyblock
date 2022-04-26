@@ -7,7 +7,9 @@ import com.iridium.iridiumcore.utils.Placeholder;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.Upgrade;
 import com.iridium.iridiumskyblock.database.Island;
+import com.iridium.iridiumskyblock.upgrades.OresUpgrade;
 import com.iridium.iridiumskyblock.upgrades.UpgradeData;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +58,27 @@ public class IslandUpgradesGUI extends IslandGUI {
                 placeholderList.add(new Placeholder("mobcoinscost", IridiumSkyblock.getInstance().getPlaceholders().mobcoinsCost));
             }
 
-            inventory.setItem(item.slot, ItemStackUtils.makeItem(item, placeholderList));
+            if(upgrade.getKey().equals("generator")) {
+                List<String> lore = new ArrayList<>(item.lore);
+                OresUpgrade oresUpgrade = (OresUpgrade) upgrade.getValue().upgrades.get(level);
+                if(upgrade.getValue().upgrades.containsKey(level + 1)) {
+                    OresUpgrade nextOresUpgrade = (OresUpgrade) upgrade.getValue().upgrades.get(level + 1);
+                    nextOresUpgrade.ores.forEach((material, chance) -> {
+                        String materialName = StringUtils.capitaliseAllWords(material.name().toLowerCase().replace("_", " "));
+                        int previousChance = oresUpgrade.ores.getOrDefault(material, 0);
+                        lore.add(lore.size() - 2, "&b&l • &7" + materialName + " &b" + previousChance + "% &7-> &b" + chance + "%");
+                    });
+                } else {
+                    oresUpgrade.ores.forEach((material, chance) -> {
+                        String materialName = StringUtils.capitaliseAllWords(material.name().toLowerCase().replace("_", " "));
+                        lore.add(lore.size() - 2, "&b&l • &7" + materialName + " &b" + chance + "%");
+                    });
+                }
+                Item clone = new Item(item.material, item.amount, item.displayName, lore);
+                inventory.setItem(item.slot, ItemStackUtils.makeItem(clone, placeholderList));
+            } else {
+                inventory.setItem(item.slot, ItemStackUtils.makeItem(item, placeholderList));
+            }
         }
 
         if (IridiumSkyblock.getInstance().getConfiguration().backButtons && getPreviousInventory() != null) {

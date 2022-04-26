@@ -18,9 +18,7 @@ import com.iridium.iridiumskyblock.managers.*;
 import com.iridium.iridiumskyblock.placeholders.ClipPlaceholderAPI;
 import com.iridium.iridiumskyblock.placeholders.MVDWPlaceholderAPI;
 import com.iridium.iridiumskyblock.shop.ShopManager;
-import com.iridium.iridiumskyblock.support.RoseStackerSupport;
 import com.iridium.iridiumskyblock.support.StackerSupport;
-import com.iridium.iridiumskyblock.support.WildStackerSupport;
 import com.iridium.iridiumskyblock.utils.PlayerUtils;
 import de.jeff_media.updatechecker.UpdateChecker;
 import lombok.Getter;
@@ -30,7 +28,6 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
@@ -309,8 +306,8 @@ public class IridiumSkyblock extends IridiumCore {
     }
 
     private StackerSupport registerBlockStackerSupport() {
-        if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) return new RoseStackerSupport();
-        if (Bukkit.getPluginManager().isPluginEnabled("WildStacker")) return new WildStackerSupport();
+        //if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) return new RoseStackerSupport();
+        //if (Bukkit.getPluginManager().isPluginEnabled("WildStacker")) return new WildStackerSupport();
         return new StackerSupport() {
             @Override
             public int getExtraBlocks(Island island, XMaterial material) {
@@ -646,6 +643,7 @@ public class IridiumSkyblock extends IridiumCore {
         this.permissionList.put(PermissionType.PORTAL.getPermissionKey(), permissions.portal);
         this.permissionList.put(PermissionType.ISLAND_SETTINGS.getPermissionKey(), permissions.islandSettings);
         this.permissionList.put(PermissionType.ENDER_PEARL.getPermissionKey(), permissions.enderPearl);
+        this.permissionList.put(PermissionType.ITEM_FRAMES.getPermissionKey(), permissions.interactItemFrames);
     }
 
     private void initializeSettingsList() {

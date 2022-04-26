@@ -35,7 +35,8 @@ public enum PermissionType {
     INTERACT("interact"),
     PORTAL("portal"),
     ISLAND_SETTINGS("island_settings"),
-    ENDER_PEARL("ender_pearl");
+    ENDER_PEARL("ender_pearl"),
+    ITEM_FRAMES("item_frames");
 
     private final String permissionKey;
 }

@@ -131,6 +131,8 @@ public class Upgrades {
                     "&b&l • &7Current Level: &b%level%",
                     "&b&l • &7Upgrade Cost: &e%mobcoinscost% Mob Coins",
                     "",
+                    "&b&lOres:",
+                    "",
                     "&b&l[!] &bClick to Purchase this Upgrade"
             )), ImmutableMap.<Integer, OresUpgrade>builder()
             .put(1, new OresUpgrade(0, 0, 0, 0, ImmutableMap.<XMaterial, Integer>builder()

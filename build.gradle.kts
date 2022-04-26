@@ -23,14 +23,17 @@ repositories {
 
 dependencies {
     // Dependencies that we want to shade in
-    implementation("org.jetbrains:annotations:22.0.0")
     implementation(files("../OPBlocks/lib/IridiumCore-1.5.0.jar"))
     implementation(files("../OPBlocks/lib/Crunch-1.0.0.jar"))
-    //implementation("com.iridium:IridiumCore:1.5.0")
-    implementation("org.bstats:bstats-bukkit:2.2.1")
+    compileOnly(files("../OPBlocks/lib/worldedit-bukkit-7.2.10.jar"))
+    compileOnly(files("../OPBlocks/lib/CurrenciesAPI-MultiBridge.jar"))
+    compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))
+    implementation("org.jetbrains:annotations:23.0.0")
+    //implementation("com.iridium:IridiumCore:1.6.6")
+    implementation("org.bstats:bstats-bukkit:3.0.0")
     //implementation("com.github.Redempt:Crunch:1.0.0")
-    implementation("com.j256.ormlite:ormlite-core:5.7")
-    implementation("com.j256.ormlite:ormlite-jdbc:5.7")
+    implementation("com.j256.ormlite:ormlite-core:6.1")
+    implementation("com.j256.ormlite:ormlite-jdbc:6.1")
     implementation("de.jeff_media:SpigotUpdateChecker:1.3.0")
 
     // Other dependencies that are not required or already available at runtime
@@ -42,17 +45,12 @@ dependencies {
     compileOnly("be.maximvdw:MVdWPlaceholderAPI:2.1.1-SNAPSHOT") {
         exclude("org.spigotmc")
     }
-    compileOnly("com.gc:AdvancedSpawners:1.2.6")
-    compileOnly("dev.rosewood:rosestacker:1.4.0")
-    compileOnly("com.github.OmerBenGera:WildStackerAPI:master")
-    compileOnly("com.songoda:UltimateStacker:2.1.7")
-    compileOnly("com.songoda:EpicSpawners:7.0.8")
-    compileOnly("com.sk89q:WorldEdit:7.2.6")
-
-    compileOnly(files("../OPBlocks/lib/CurrenciesAPI-MultiBridge.jar"))
-    compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))
-    compileOnly(files("../OPBlocks/lib/Outposts.jar"))
-    compileOnly(files("../OPBlocks/lib/ArkJs-v1.16.jar"))
+    //compileOnly("com.gc:AdvancedSpawners:1.2.6")
+    //compileOnly("dev.rosewood:rosestacker:1.4.2")
+    //compileOnly("com.github.OmerBenGera:WildStackerAPI:master")
+    //compileOnly("com.songoda:UltimateStacker:2.1.7")
+    //compileOnly("com.songoda:EpicSpawners:7.0.8")
+    //compileOnly("com.sk89q:WorldEdit:7.2.6")
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.22")

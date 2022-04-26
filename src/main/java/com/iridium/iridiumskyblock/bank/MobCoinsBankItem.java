@@ -83,7 +83,7 @@ public class MobCoinsBankItem extends BankItem {
         if (island.isPresent()) {
             IslandBank islandBank = IridiumSkyblock.getInstance().getIslandManager().getIslandBank(island.get(), this);
             double mobcoins = CurrenciesAPI.getInstance().getSync("mobcoins", player);
-            if (mobcoins > amount.doubleValue()) {
+            if (mobcoins >= amount.doubleValue()) {
                 CurrenciesAPI.getInstance().take("mobcoins", player, amount.doubleValue(), "Island Bank Deposit");
                 islandBank.setNumber(islandBank.getNumber() + amount.doubleValue());
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankDeposited

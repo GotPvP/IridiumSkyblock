@@ -8,6 +8,7 @@ import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.database.IslandTrusted;
 import com.iridium.iridiumskyblock.database.User;
 import com.iridium.iridiumskyblock.managers.CooldownProvider;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -65,7 +66,7 @@ public class EntityDamageListener implements Listener {
 
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
-            if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island.get(), IridiumSkyblock.getInstance().getUserManager().getUser(player), PermissionType.KILL_MOBS)) {
+            if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island.get(), IridiumSkyblock.getInstance().getUserManager().getUser(player), event.getEntity() instanceof Hanging ? PermissionType.ITEM_FRAMES : PermissionType.KILL_MOBS)) {
                 event.setCancelled(true);
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotHurtMobs.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
             }
@@ -77,7 +78,7 @@ public class EntityDamageListener implements Listener {
             if (projectile.getShooter() == null || !(projectile.getShooter() instanceof Player)) return;
             
             Player player = (Player) projectile.getShooter();
-            if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island.get(), IridiumSkyblock.getInstance().getUserManager().getUser(player), PermissionType.KILL_MOBS)) {
+            if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island.get(), IridiumSkyblock.getInstance().getUserManager().getUser(player), event.getEntity() instanceof Hanging ? PermissionType.ITEM_FRAMES : PermissionType.KILL_MOBS)) {
                 projectile.remove();
                 event.setCancelled(true);
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotHurtMobs.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));

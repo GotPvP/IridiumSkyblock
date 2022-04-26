@@ -47,4 +47,5 @@ public class Permissions {
     public Permission portal = new Permission(new Item(XMaterial.OBSIDIAN, 43, 1, "&bPortal", Arrays.asList("&7Grants the ability to use a portal on the island.", "", "&b&lPermission", "%permission%")), 1, IslandRank.MEMBER);
     public Permission islandSettings = new Permission(new Item(XMaterial.BOOKSHELF, 10, 1, "&bIsland Settings", Arrays.asList("&7Grant the ability to change the settings of your Island.", "", "&b&lPermission", "%permission%")), 2, IslandRank.MODERATOR);
     public Permission enderPearl = new Permission(new Item(XMaterial.ENDER_PEARL, 11, 1, "&bUse Ender Pearls", Arrays.asList("&7Grant the ability to use Ender Pearls on your Island.", "", "&b&lPermission", "%permission%")), 2, IslandRank.MEMBER);
+    public Permission interactItemFrames = new Permission(new Item(XMaterial.ITEM_FRAME, 12, 1, "&bUse Item Frames and Paintings", Arrays.asList("&7Grant the ability to use Item Frames and Paintings on your Island.", "", "&b&lPermission", "%permission%")), 2, IslandRank.MEMBER);
 }
