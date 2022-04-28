@@ -4,6 +4,7 @@ import com.iridium.iridiumcore.Color;
 import com.iridium.iridiumcore.IridiumCore;
 import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 import com.iridium.iridiumcore.utils.NumberFormatter;
+import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockReloadEvent;
 import com.iridium.iridiumskyblock.bank.BankItem;
@@ -92,6 +93,7 @@ public class IridiumSkyblock extends IridiumCore {
     private Map<String, Mission> missionsList = new HashMap<>();
     private Map<String, Upgrade<?>> upgradesList;
     private Map<String, Booster> boosterList;
+    private List<Island> islandsToRecalulate = new ArrayList<>();
 
     private Economy economy;
 
@@ -208,6 +210,12 @@ public class IridiumSkyblock extends IridiumCore {
                 ((GUI) inventoryHolder).addContent(player.getOpenInventory().getTopInventory());
             }
         }), 0, 20);
+
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            List<Island> pendingIslands = new ArrayList<>(islandsToRecalulate);
+            islandsToRecalulate = new ArrayList<>();
+            pendingIslands.forEach(island -> IridiumSkyblock.getInstance().getIslandManager().recalculateIsland(island));
+        }, 0, 20 * 60 * 5);
 
         // Effect Upgrades
         Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getServer().getOnlinePlayers().forEach(player -> {

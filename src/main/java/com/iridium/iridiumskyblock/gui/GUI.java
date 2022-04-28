@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -67,6 +68,8 @@ public abstract class GUI implements InventoryHolder {
      * @param event The InventoryClickEvent provided by Bukkit
      */
     public abstract void onInventoryClick(InventoryClickEvent event);
+
+    public abstract void onInventoryClose(InventoryCloseEvent event);
 
     /**
      * Called when updating the Inventories contents

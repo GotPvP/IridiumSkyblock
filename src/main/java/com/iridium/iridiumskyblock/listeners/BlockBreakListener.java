@@ -6,7 +6,12 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.PermissionType;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.database.*;
+import com.iridium.iridiumskyblock.gui.MythicalChestMainGUI;
+import com.opblocks.overflowbackpacks.OverflowAPI;
+import com.opblocks.utils.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.EnderChest;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
@@ -15,6 +20,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Optional;
 
@@ -34,6 +42,26 @@ public class BlockBreakListener implements Listener {
         } else if (material.equals(XMaterial.SPAWNER) && !IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island.get(), user, PermissionType.SPAWNERS)) {
             event.setCancelled(true);
             player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotMineSpawners.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+        }
+
+        if(!event.isCancelled() && event.getBlock().getState() instanceof EnderChest enderChest) {
+            if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
+                event.setCancelled(true);
+
+                int level = enderChest.getPersistentDataContainer().get(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER);
+
+                ItemStack itemStack = ItemBuilder.of(Material.ENDER_CHEST).name("&d&lMythical Chest").lore("", " &d• &fLevel &d" + level, "", "&7A mysterious chest that adds", "&7island levels based on how", "&7many blocks you put into it!").persistent(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER, level).build();
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                enderChest.getPersistentDataContainer().getKeys().forEach(key -> {
+                    if(key.getKey().contains("mythicalcheststorage")) {
+                        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, enderChest.getPersistentDataContainer().get(key, PersistentDataType.STRING));
+                    }
+                });
+                itemStack.setItemMeta(itemMeta);
+                OverflowAPI.add(player, itemStack);
+                event.getBlock().setType(Material.AIR);
+                return;
+            }
         }
     }
 

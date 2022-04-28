@@ -10,13 +10,18 @@ import com.iridium.iridiumskyblock.database.IslandBlocks;
 import com.iridium.iridiumskyblock.database.IslandSpawners;
 import com.iridium.iridiumskyblock.database.User;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -79,6 +84,22 @@ public class BlockPlaceListener implements Listener {
                 islandSpawners.setAmount(islandSpawners.getAmount() + 1);
             }
         });
+
+        if(event.getItemInHand().hasItemMeta() && event.getBlock().getState() instanceof EnderChest enderChest) {
+            ItemMeta itemMeta = event.getItemInHand().getItemMeta();
+            if(itemMeta.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
+                enderChest.getPersistentDataContainer().set(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER, itemMeta.getPersistentDataContainer().get(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER));
+                itemMeta.getPersistentDataContainer().getKeys().forEach(key -> {
+                    if(key.getKey().contains("mythicalcheststorage")) {
+                        enderChest.getPersistentDataContainer().set(key, PersistentDataType.STRING, itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING));
+                    }
+                });
+                enderChest.update();
+            } else {
+                return;
+            }
+            enderChest.update();
+        }
     }
 
 }

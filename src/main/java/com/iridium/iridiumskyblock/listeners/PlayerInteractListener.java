@@ -4,11 +4,14 @@ import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.PermissionType;
+import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.database.IslandBank;
 import com.iridium.iridiumskyblock.database.User;
+import com.iridium.iridiumskyblock.gui.MythicalChestMainGUI;
 import com.iridium.iridiumskyblock.managers.CooldownProvider;
 import org.bukkit.Material;
+import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +20,7 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -85,6 +89,14 @@ public class PlayerInteractListener implements Listener {
                     player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotInteract.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
                 }
                 return;
+            }
+
+            if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState() instanceof EnderChest enderChest) {
+                if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
+                    player.openInventory(new MythicalChestMainGUI(enderChest).getInventory());
+                    event.setCancelled(true);
+                    return;
+                }
             }
 
             if (event.getAction() == Action.PHYSICAL && material == XMaterial.FARMLAND) {

@@ -7,6 +7,7 @@ import com.iridium.iridiumskyblock.PlaceholderBuilder;
 import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.database.User;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.List;
@@ -81,6 +82,11 @@ public class VisitGUI extends GUI {
                 event.getWhoClicked().closeInventory();
             }
         }
+    }
+
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
     }
 
 }

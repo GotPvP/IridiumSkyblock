@@ -9,11 +9,18 @@ import com.iridium.iridiumskyblock.database.IslandUpgrade;
 import com.iridium.iridiumskyblock.database.User;
 import com.iridium.iridiumskyblock.managers.IslandManager;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +34,7 @@ public class IridiumSkyblockAPI {
 
     private static IridiumSkyblockAPI instance;
     private final IridiumSkyblock iridiumSkyblock;
+    private final NamespacedKey mythicalChestKey = new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChest");
 
     static {
         instance = new IridiumSkyblockAPI(IridiumSkyblock.getInstance());
@@ -69,6 +77,32 @@ public class IridiumSkyblockAPI {
      */
     public void addUpgrade(@NotNull String upgradeName, @NotNull Upgrade<?> upgrade) {
         iridiumSkyblock.getUpgradesList().put(upgradeName, upgrade);
+    }
+
+    public NamespacedKey getMythicalChestKey() {
+        return mythicalChestKey;
+    }
+
+    public static String inventorySerialize(Inventory inventory) {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("contents", inventory.getContents());
+        return config.saveToString();
+    }
+
+    private static ItemStack[] getItemStackArray(YamlConfiguration config, String section) {
+        List<ItemStack> itemStacks = new ArrayList<>();
+        config.getList(section).forEach(item -> itemStacks.add((ItemStack) item));
+        return itemStacks.toArray(ItemStack[]::new);
+    }
+
+    public static void inventoryDeserializeAndApply(Inventory inventory, String serialized) {
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.loadFromString(serialized);
+            inventory.setContents(getItemStackArray(config, "contents"));
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

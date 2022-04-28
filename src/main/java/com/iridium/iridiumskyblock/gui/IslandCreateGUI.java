@@ -4,6 +4,7 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.configs.Schematics;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -39,4 +40,8 @@ public class IslandCreateGUI extends SchematicGUI {
         player.closeInventory();
     }
 
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
+    }
 }

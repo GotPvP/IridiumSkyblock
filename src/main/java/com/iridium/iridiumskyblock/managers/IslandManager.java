@@ -29,12 +29,14 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -875,7 +877,7 @@ public class IslandManager {
         getIslandChunks(island, getWorld()).thenAcceptAsync(chunks -> {
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandBlocksTableManager().getEntries(island).forEach(islandBlocks -> islandBlocks.setAmount(0));
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandSpawnersTableManager().getEntries(island).forEach(islandSpawners -> islandSpawners.setAmount(0));
-
+            island.setExtraValue(0);
             recalculateIsland(island, chunks);
         });
     }
@@ -916,11 +918,17 @@ public class IslandManager {
     private void getAllTileInIsland(Island island, List<Chunk> chunks) {
         chunks.forEach(chunk -> {
             for (BlockState blockState : chunk.getTileEntities()) {
-                if (!(blockState instanceof CreatureSpawner)) continue;
                 if (!island.isInIsland(blockState.getLocation())) continue;
-                CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
-                IslandSpawners islandSpawners = IridiumSkyblock.getInstance().getIslandManager().getIslandSpawners(island, creatureSpawner.getSpawnedType());
-                islandSpawners.setAmount(islandSpawners.getAmount() + 1);
+                if (blockState instanceof CreatureSpawner creatureSpawner) {
+                    IslandSpawners islandSpawners = IridiumSkyblock.getInstance().getIslandManager().getIslandSpawners(island, creatureSpawner.getSpawnedType());
+                    islandSpawners.setAmount(islandSpawners.getAmount() + 1);
+                } else if(blockState instanceof EnderChest enderChest) {
+                    if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
+                        for(int i = 1; i <= 6; i++) {
+                            island.setExtraValue(island.getExtraValue() + enderChest.getPersistentDataContainer().getOrDefault(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestValue-" + i), PersistentDataType.INTEGER, 0));
+                        }
+                    }
+                }
             }
         });
     }

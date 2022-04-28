@@ -15,6 +15,7 @@ import com.iridium.iridiumskyblock.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -55,4 +56,8 @@ public class IslandRegenGUI extends SchematicGUI {
         }
     }
 
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
+    }
 }

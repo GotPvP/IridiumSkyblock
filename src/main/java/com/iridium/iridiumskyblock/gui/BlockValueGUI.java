@@ -8,6 +8,7 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.configs.BlockValues.ValuableBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,6 +26,10 @@ public class BlockValueGUI extends GUI {
     private final BlockValueType guiType;
     private int page = 1;
 
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
+    }
 
     /**
      * The default constructor.

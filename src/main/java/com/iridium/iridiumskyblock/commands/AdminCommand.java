@@ -4,9 +4,13 @@ import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.database.Island;
+import com.opblocks.overflowbackpacks.OverflowAPI;
+import com.opblocks.utils.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -60,6 +64,26 @@ public class AdminCommand extends Command {
                     sender.sendMessage(StringUtils.color("&b/is admin size <player>&f: &7See the size of a player's island."));
                     sender.sendMessage(StringUtils.color("&b/is admin size <player> <amount>&f: &7Set the size of a player's island. This size is on top of their upgrade"));
                     return true;
+                } else if(args[1].equalsIgnoreCase("mythicalchest")) {
+                    Player target = Bukkit.getPlayer(args[2]);
+                    int level = 1;
+                    if(args.length > 3) {
+                        level = Integer.parseInt(args[3]);
+                    }
+                    if(target != null) {
+                        OverflowAPI.add(target, ItemBuilder.of(Material.ENDER_CHEST).name("&d&lMythical Chest").lore("", " &d• &fLevel &d" + level, "", "&7A mysterious chest that adds", "&7island levels based on how", "&7many blocks you put into it!").persistent(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER, level).build());
+                        return true;
+                    }
+                    sender.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cInvalid player!"));
+                    return true;
+                } else if(args[1].equalsIgnoreCase("recalculate")) {
+                    if(sender instanceof Player player) {
+                        IridiumSkyblockAPI.getInstance().getIslandViaLocation(player.getLocation()).ifPresent(island -> {
+                            IridiumSkyblock.getInstance().getIslandManager().recalculateIsland(island);
+                            sender.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &7Island Recalculated!"));
+                        });
+                    }
+                    return true;
                 }
             } else {
                 sendHelp(sender);
@@ -73,6 +97,8 @@ public class AdminCommand extends Command {
         sender.sendMessage(StringUtils.color("&8=========== &b&lIsland Admin Help &r&8==========="));
         sender.sendMessage(StringUtils.color("&b/is admin help&f: &7Display admin commands"));
         sender.sendMessage(StringUtils.color("&b/is admin size&f: &7View/Change the size of an island"));
+        sender.sendMessage(StringUtils.color("&b/is admin mythicalchest <player>&f: &7Give a mythical chest"));
+        sender.sendMessage(StringUtils.color("&b/is admin recalculate &f: &7Recalculate the island you're on"));
     }
 
     @Override

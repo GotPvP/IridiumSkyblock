@@ -28,6 +28,7 @@ dependencies {
     compileOnly(files("../OPBlocks/lib/worldedit-bukkit-7.2.10.jar"))
     compileOnly(files("../OPBlocks/lib/CurrenciesAPI-MultiBridge.jar"))
     compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))
+    compileOnly(files("../OPBlocks/lib/OverflowBackpack.jar"))
     implementation("org.jetbrains:annotations:23.0.0")
     //implementation("com.iridium:IridiumCore:1.6.6")
     implementation("org.bstats:bstats-bukkit:3.0.0")

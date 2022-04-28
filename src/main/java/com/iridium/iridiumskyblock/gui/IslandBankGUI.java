@@ -13,6 +13,7 @@ import com.opblocks.utils.SignContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,5 +90,10 @@ public class IslandBankGUI extends IslandGUI {
         }
 
         addContent(event.getInventory());
+    }
+
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
     }
 }

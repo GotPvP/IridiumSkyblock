@@ -152,6 +152,8 @@ public class Inventories {
 
     public NoItemGUI islandRegenConfirmGUI = new NoItemGUI(27, "&7Confirm Island Regen", background2);
 
+    public NoItemGUI mythicalChestGUI = new NoItemGUI(54, "&8Mythical Chest", background1);
+
     public SingleItemGUI warpsGUI = new SingleItemGUI(27, "&7%island_name%'s Island Warps", background2, new Item(
             XMaterial.GREEN_STAINED_GLASS_PANE, 1, "&b&l%warp_name%",
             Arrays.asList(

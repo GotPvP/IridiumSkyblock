@@ -7,6 +7,7 @@ import com.iridium.iridiumskyblock.managers.CooldownProvider;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,5 +56,10 @@ public class ConfirmationGUI extends GUI {
             player.closeInventory();
             cooldownProvider.applyCooldown(player);
         }
+    }
+
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+
     }
 }
