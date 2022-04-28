@@ -561,4 +561,19 @@ public class Upgrades {
             .put(6, new BeaconUpgrade(2500000, 0, 500000, 0))
             .put(7, new BeaconUpgrade(5000000, 0, 1000000, 0))
             .build());
+
+    public Upgrade<NetherRealmUpgrade> netherRealmUpgrade = new Upgrade<>(true, "Nether Realm",
+            new Item(XMaterial.RED_NETHER_BRICKS, 33, 1, "&c&lNether Realm", Arrays.asList(
+                    "",
+                    "&7Want to access the nether realm? Buy this",
+                    "&7upgrade to go to the nether realm! (&c/is nether&7)",
+                    "",
+                    "&c&lInformation:",
+                    "&c&l • &7Upgrade Cost: &e%mobcoinscost% Mob Coins",
+                    "",
+                    "&c&l[!] &cClick to Purchase this Upgrade"
+            )), ImmutableMap.<Integer, NetherRealmUpgrade>builder()
+            .put(1, new NetherRealmUpgrade(0, 0, 0, 0))
+            .put(2, new NetherRealmUpgrade(0, 0, 500000, 0))
+            .build());
 }

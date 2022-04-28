@@ -10,6 +10,7 @@ import com.iridium.iridiumskyblock.database.Island;
 import com.iridium.iridiumskyblock.upgrades.OresUpgrade;
 import com.iridium.iridiumskyblock.upgrades.UpgradeData;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -99,6 +100,9 @@ public class IslandUpgradesGUI extends IslandGUI {
             if (event.getSlot() == upgrade.getValue().item.slot) {
                 IridiumSkyblock.getInstance().getCommands().upgradesCommand.execute(event.getWhoClicked(), new String[]{"", upgrade.getKey()});
                 addContent(event.getInventory());
+                if(upgrade.getValue().name.equalsIgnoreCase("Nether Realm")) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "nradmin unlock " + event.getWhoClicked().getName());
+                }
             }
         }
     }

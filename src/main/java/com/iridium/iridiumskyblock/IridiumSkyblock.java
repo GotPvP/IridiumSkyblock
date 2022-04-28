@@ -509,6 +509,7 @@ public class IridiumSkyblock extends IridiumCore {
         if (upgrades.enchantSuccessChanceUpgrade.name == null) upgrades.enchantSuccessChanceUpgrade.name = "Enchant Success Chance";
         if (upgrades.enchantFailureChanceUpgrade.name == null) upgrades.enchantFailureChanceUpgrade.name = "Enchant Failure chance";
         if (upgrades.beaconUpgrade.name == null) upgrades.beaconUpgrade.name = "Beacon";
+        if (upgrades.netherRealmUpgrade.name == null) upgrades.netherRealmUpgrade.name = "Nether Realm";
 
         this.bankItemList = new ArrayList<>();
         if (bankItems.crystalsBankItem.isEnabled()) {
@@ -575,6 +576,9 @@ public class IridiumSkyblock extends IridiumCore {
         }
         if (upgrades.beaconUpgrade.enabled) {
             upgradesList.put("beacon", upgrades.beaconUpgrade);
+        }
+        if (upgrades.netherRealmUpgrade.enabled) {
+            upgradesList.put("netherRealm", upgrades.netherRealmUpgrade);
         }
 
         this.boosterList = new HashMap<>();
