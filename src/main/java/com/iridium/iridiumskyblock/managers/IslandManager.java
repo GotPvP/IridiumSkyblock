@@ -104,7 +104,7 @@ public class IslandManager {
                 world = getEndWorld();
                 break;*/
             default:
-                world = getWorld();
+                world = island.getWorld();
                 break;
         }
 
@@ -245,15 +245,15 @@ public class IslandManager {
 
         if (IridiumSkyblock.getInstance().getChunkGenerator() instanceof OceanGenerator) {
             OceanGenerator oceanGenerator = (OceanGenerator) IridiumSkyblock.getInstance().getChunkGenerator();
-            for (int x = island.getPos1(getWorld()).getBlockX(); x <= island.getPos2(getWorld()).getBlockX(); x++) {
-                for (int z = island.getPos1(getWorld()).getBlockZ(); z <= island.getPos2(getWorld()).getBlockZ(); z++) {
-                    oceanGenerator.generateWater(getWorld(), x, z);
+            for (int x = island.getPos1(island.getWorld()).getBlockX(); x <= island.getPos2(island.getWorld()).getBlockX(); x++) {
+                for (int z = island.getPos1(island.getWorld()).getBlockZ(); z <= island.getPos2(island.getWorld()).getBlockZ(); z++) {
+                    oceanGenerator.generateWater(island.getWorld(), x, z);
                     //oceanGenerator.generateWater(getNetherWorld(), x, z);
                     //oceanGenerator.generateWater(getEndWorld(), x, z);
                 }
             }
         } else {
-            deleteIslandBlocks(island, getWorld(), 0).join();
+            deleteIslandBlocks(island, island.getWorld(), 0).join();
             //deleteIslandBlocks(island, getNetherWorld(), 0).join();
             //deleteIslandBlocks(island, getEndWorld(), 0).join();
         }
@@ -318,12 +318,12 @@ public class IslandManager {
 
         pasteSchematic(island, schematicConfig).thenRun(() -> {
 
-            Location islandHome = island.getCenter(IridiumSkyblock.getInstance().getIslandManager().getWorld()).add(schematicConfig.xHome, schematicConfig.yHome, schematicConfig.zHome);
+            Location islandHome = island.getCenter(island.getWorld()).add(schematicConfig.xHome, schematicConfig.yHome, schematicConfig.zHome);
             islandHome.setYaw(schematicConfig.yawHome);
             island.setHome(islandHome);
 
             //getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
-            getEntities(island, getWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
+            getEntities(island, island.getWorld()).thenAccept(entities -> Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () -> {
                         for (Entity entity : entities) {
                             if (entity instanceof Player) {
                                 teleportHome((Player) entity, island, 0);
@@ -341,7 +341,7 @@ public class IslandManager {
         setIslandBiome(island, schematicConfig.nether.biome);
         setIslandBiome(island, schematicConfig.end.biome);
         return IridiumSkyblock.getInstance().getSchematicManager().pasteSchematic(island, ImmutableMap.<World, Schematics.SchematicWorld>builder()
-                .put(getWorld(), schematicConfig.overworld)
+                .put(island.getWorld(), schematicConfig.overworld)
                 //.put(getNetherWorld(), schematicConfig.nether)
                 //.put(getEndWorld(), schematicConfig.end)
                 .build()
@@ -701,7 +701,8 @@ public class IslandManager {
         Bukkit.getPluginManager().callEvent(islandDeleteEvent);
         if (islandDeleteEvent.isCancelled()) return;
         clearIslandCache();
-        deleteIslandBlocks(island, getWorld(), 3);
+        deleteIslandBlocks(island, island.getWorld(), 3);
+        //deleteIslandBlocks(island, getWorld(), 3);
         //deleteIslandBlocks(island, getNetherWorld(), 3);
         //deleteIslandBlocks(island, getEndWorld(), 3);
         deleteIslanDatabasedEntries(island);
@@ -721,7 +722,7 @@ public class IslandManager {
             }
         });
         //getEntities(island, getWorld(), getEndWorld(), getNetherWorld()).thenAccept(entities ->
-        getEntities(island, getWorld()).thenAccept(entities ->
+        getEntities(island, island.getWorld()).thenAccept(entities ->
                 Bukkit.getScheduler().runTask(IridiumSkyblock.getInstance(), () ->
                         entities.stream()
                                 .filter(entity -> entity instanceof Player)
@@ -874,7 +875,7 @@ public class IslandManager {
      */
     public void recalculateIsland(@NotNull Island island) {
         //getIslandChunks(island, getWorld(), getNetherWorld(), getEndWorld()).thenAcceptAsync(chunks -> {
-        getIslandChunks(island, getWorld()).thenAcceptAsync(chunks -> {
+        getIslandChunks(island, island.getWorld()).thenAcceptAsync(chunks -> {
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandBlocksTableManager().getEntries(island).forEach(islandBlocks -> islandBlocks.setAmount(0));
             IridiumSkyblock.getInstance().getDatabaseManager().getIslandSpawnersTableManager().getEntries(island).forEach(islandSpawners -> islandSpawners.setAmount(0));
             island.setExtraValue(0);
@@ -1011,7 +1012,7 @@ public class IslandManager {
      */
     public void sendIslandBorder(@NotNull Island island) {
         //getEntities(island, getWorld(), getNetherWorld(), getEndWorld()).thenAccept(entities -> {
-        getEntities(island, getWorld()).thenAccept(entities -> {
+        getEntities(island, island.getWorld()).thenAccept(entities -> {
             for (Entity entity : entities) {
                 if (entity instanceof Player) {
                     PlayerUtils.sendBorder((Player) entity, island);
@@ -1053,8 +1054,12 @@ public class IslandManager {
      * @return The main skyblock {@link World}, might be null if some third-party plugin deleted it
      * @since 3.0.0
      */
-    public World getWorld() {
-        return Bukkit.getWorld(IridiumSkyblock.getInstance().getConfiguration().worldName);
+    public List<World> getWorlds() {
+        List<World> worlds = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            worlds.add(Bukkit.getWorld(i == 0 ? IridiumSkyblock.getInstance().getConfiguration().worldName : IridiumSkyblock.getInstance().getConfiguration().worldName + "-" + i));
+        }
+        return worlds;
     }
 
     /**
@@ -1078,7 +1083,7 @@ public class IslandManager {
     }
 
     public boolean isIslandOverWorld(World world) {
-        return world.equals(getWorld());
+        return world.getName().contains(IridiumSkyblock.getInstance().getConfiguration().worldName);
     }
 
     public boolean isIslandNether(World world) {

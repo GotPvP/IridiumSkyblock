@@ -90,7 +90,7 @@ public class Placeholders {
                 )
                 .put(startKey + "_overworld_biome", player ->
                         islandGetter.getIsland(player)
-                                .map(island -> island.getCenter(IridiumSkyblock.getInstance().getIslandManager().getWorld()).getBlock())
+                                .map(island -> island.getCenter(island.getWorld()).getBlock())
                                 .map(Block::getBiome)
                                 .map(biome -> WordUtils.capitalizeFully(biome.name().toLowerCase().replace("_", " ")))
                                 .orElse(placeholdersConfig.islandBiome)

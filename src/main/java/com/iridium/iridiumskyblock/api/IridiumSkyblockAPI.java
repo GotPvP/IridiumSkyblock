@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.block.EnderChest;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -20,10 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -35,6 +33,7 @@ public class IridiumSkyblockAPI {
     private static IridiumSkyblockAPI instance;
     private final IridiumSkyblock iridiumSkyblock;
     private final NamespacedKey mythicalChestKey = new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChest");
+    private List<String> openMythicalChests = new ArrayList<>();
 
     static {
         instance = new IridiumSkyblockAPI(IridiumSkyblock.getInstance());
@@ -81,6 +80,10 @@ public class IridiumSkyblockAPI {
 
     public NamespacedKey getMythicalChestKey() {
         return mythicalChestKey;
+    }
+
+    public List<String> getOpenMythicalChests() {
+        return openMythicalChests;
     }
 
     public static String inventorySerialize(Inventory inventory) {
@@ -267,8 +270,8 @@ public class IridiumSkyblockAPI {
      * @return The main skyblock {@link World}, might be null if some third-party plugin deleted it
      * @since 3.0.0
      */
-    public World getWorld() {
-        return iridiumSkyblock.getIslandManager().getWorld();
+    public List<World> getWorlds() {
+        return iridiumSkyblock.getIslandManager().getWorlds();
     }
 
     /**
@@ -300,7 +303,7 @@ public class IridiumSkyblockAPI {
      */
     public boolean isIslandWorld(World world) {
         //return Objects.equals(getWorld(), world) || Objects.equals(getNetherWorld(), world) || Objects.equals(getEndWorld(), world);
-        return Objects.equals(getWorld(), world);
+        return getWorlds().contains(world);
     }
 
     public boolean isIslandOverWorld(World world) {

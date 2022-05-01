@@ -13,6 +13,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Represents an Island of IridiumSkyblock.
@@ -45,6 +47,9 @@ public final class Island extends DatabaseObject {
 
     @DatabaseField(columnName = "name", unique = true)
     private String name;
+
+    @DatabaseField(columnName = "world", canBeNull = false)
+    private String world;
 
     /*
     The islands home relative to the island center as a string.
@@ -76,10 +81,13 @@ public final class Island extends DatabaseObject {
 
     // Cache
     private Integer size;
+    private World islandWorld;
 
     public Island(String name, int id) {
         this(name, IridiumSkyblock.getInstance().getSchematics().schematics.values().stream().findFirst().get());
         this.id = id;
+        int worldNumber = ThreadLocalRandom.current().nextInt(8);
+        this.world = worldNumber == 0 ? IridiumSkyblock.getInstance().getConfiguration().worldName : IridiumSkyblock.getInstance().getConfiguration().worldName + "-" + worldNumber;
     }
 
     /**
@@ -94,6 +102,8 @@ public final class Island extends DatabaseObject {
         this.home = schematicConfig.xHome + "," + schematicConfig.yHome + "," + schematicConfig.zHome + ",0," + schematicConfig.yawHome;
         this.time = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()).toInstant().toEpochMilli();
         this.color = IridiumSkyblock.getInstance().getBorder().defaultColor;
+        int worldNumber = ThreadLocalRandom.current().nextInt(8);
+        this.world = worldNumber == 0 ? IridiumSkyblock.getInstance().getConfiguration().worldName : IridiumSkyblock.getInstance().getConfiguration().worldName + "-" + worldNumber;
     }
 
     /**
@@ -203,7 +213,7 @@ public final class Island extends DatabaseObject {
      */
     public @NotNull Location getHome() {
         String[] params = home.split(",");
-        World world = IridiumSkyblock.getInstance().getIslandManager().getWorld();
+        World world = getWorld();
         return new Location(world, Double.parseDouble(params[0]), Double.parseDouble(params[1]), Double.parseDouble(params[2]), Float.parseFloat(params[4]), Float.parseFloat(params[3])).add(getCenter(world));
     }
 
@@ -213,7 +223,7 @@ public final class Island extends DatabaseObject {
      * @param location The new home Location
      */
     public void setHome(@NotNull Location location) {
-        Location homeLocation = location.subtract(getCenter(location.getWorld()));
+        Location homeLocation = location.subtract(getCenter(getWorld()));
         this.home = homeLocation.getX() + "," + homeLocation.getY() + "," + homeLocation.getZ() + "," + homeLocation.getPitch() + "," + homeLocation.getYaw();
         setChanged(true);
     }
@@ -392,7 +402,7 @@ public final class Island extends DatabaseObject {
         IslandManager islandManager = IridiumSkyblock.getInstance().getIslandManager();
         World world = location.getWorld();
         //if (Objects.equals(world, islandManager.getWorld()) || Objects.equals(world, islandManager.getNetherWorld()) || Objects.equals(world, islandManager.getEndWorld())) {
-        if (Objects.equals(world, islandManager.getWorld())) {
+        if (islandManager.getWorlds().contains(world)) {
             return isInIsland(location.getBlockX(), location.getBlockZ());
         } else {
             return false;
@@ -551,5 +561,12 @@ public final class Island extends DatabaseObject {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public World getWorld() {
+        if(islandWorld == null) {
+            islandWorld = Bukkit.getWorld(world);
+        }
+        return islandWorld;
     }
 }

@@ -88,7 +88,7 @@ public class MythicalChestMainGUI extends GUI {
             int clicked = slots.indexOf(event.getSlot()) + 1;
 
             if(level >= clicked) {
-                player.openInventory(new MythicalChestGUI(mythicalChest, clicked).getInventory());
+                player.openInventory(new MythicalChestGUI(mythicalChest, player, clicked).getInventory());
                 return;
             } else if(level + 1 != clicked) {
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cYou need to purchase the previous levels first!"));

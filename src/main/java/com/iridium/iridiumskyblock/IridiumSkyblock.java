@@ -156,7 +156,11 @@ public class IridiumSkyblock extends IridiumCore {
         // Initialize the manager classes (bad) and create the world
         this.islandManager = new IslandManager();
         this.userManager = new UserManager();
+
         this.islandManager.createWorld(World.Environment.NORMAL, configuration.worldName);
+        for(int i = 1; i < 8; i++) {
+            this.islandManager.createWorld(World.Environment.NORMAL, configuration.worldName + "-" + i);
+        }
         this.islandManager.createWorld(World.Environment.NETHER, configuration.worldName + "_nether");
         this.islandManager.createWorld(World.Environment.THE_END, configuration.worldName + "_the_end");
 
@@ -221,7 +225,7 @@ public class IridiumSkyblock extends IridiumCore {
         Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getServer().getOnlinePlayers().forEach(player -> {
             User user = IridiumSkyblock.getInstance().getUserManager().getUser(player);
             user.getIsland().ifPresent(island -> {
-                if(player.getWorld() == IridiumSkyblockAPI.getInstance().getWorld()) {
+                if(IridiumSkyblockAPI.getInstance().isIslandWorld(player.getWorld())) {
                     IslandUpgrade fireResistanceUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island, "fireResistance");
                     if (fireResistanceUpgrade.getLevel() > 1) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 160, 0));
@@ -270,7 +274,8 @@ public class IridiumSkyblock extends IridiumCore {
 
         // Register worlds with multiverse
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            registerMultiverse(islandManager.getWorld());
+            islandManager.getWorlds().forEach(world -> registerMultiverse(world));
+            //registerMultiverse(islandManager.getWorld());
             //registerMultiverse(islandManager.getNetherWorld());
             //registerMultiverse(islandManager.getEndWorld());
         }, 1);

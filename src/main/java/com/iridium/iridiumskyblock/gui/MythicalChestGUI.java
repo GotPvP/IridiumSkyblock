@@ -6,6 +6,7 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.configs.BlockValues.ValuableBlock;
 import com.opblocks.inventory.BaseContainer;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Player;
@@ -24,16 +25,25 @@ public class MythicalChestGUI extends BaseContainer {
 
     private final EnderChest mythicalChest;
     private final int storage;
-
+    private boolean shouldSave = true;
     /**
      * The default constructor.
      *
      * @param mythicalChest the phsyical block
      */
-    public MythicalChestGUI(EnderChest mythicalChest, int storage) {
+    public MythicalChestGUI(EnderChest mythicalChest, Player player, int storage) {
         super(6, "Mythical Chest");
         this.mythicalChest = mythicalChest;
         this.storage = storage;
+
+        if(IridiumSkyblockAPI.getInstance().getOpenMythicalChests().contains(getMythicalChestId())) {
+            player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cYou can't have multiple people opening the chest!"));
+            shouldSave = false;
+            Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), player::closeInventory, 2);
+            return;
+        } else {
+            IridiumSkyblockAPI.getInstance().getOpenMythicalChests().add(getMythicalChestId());
+        }
 
         if(mythicalChest.getPersistentDataContainer().has(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestStorage-" + storage), PersistentDataType.STRING)) {
             IridiumSkyblockAPI.inventoryDeserializeAndApply(getInventory(), mythicalChest.getPersistentDataContainer().get(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestStorage-" + storage), PersistentDataType.STRING));
@@ -55,18 +65,27 @@ public class MythicalChestGUI extends BaseContainer {
 
     @Override
     public void onClose(InventoryCloseEvent event) {
-        if(event.getInventory().getViewers().size() == 1) {
-            mythicalChest.getPersistentDataContainer().set(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestStorage-" + storage), PersistentDataType.STRING, IridiumSkyblockAPI.inventorySerialize(getInventory()));
-            int value = 0;
-            for(ItemStack itemStack : getInventory().getContents()) {
-                if(itemStack != null && IridiumSkyblock.getInstance().getBlockValues().blockValues.containsKey(XMaterial.matchXMaterial(itemStack.getType()))) {
-                    value += IridiumSkyblock.getInstance().getBlockValues().blockValues.get(XMaterial.matchXMaterial(itemStack.getType())).value * itemStack.getAmount();
-                }
-            }
+        if(!shouldSave) return;
 
-            mythicalChest.getPersistentDataContainer().set(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestValue-" + storage), PersistentDataType.INTEGER, value);
-            mythicalChest.update();
-            IridiumSkyblockAPI.getInstance().getIslandViaLocation(mythicalChest.getLocation()).ifPresent(island -> IridiumSkyblock.getInstance().getIslandsToRecalulate().add(island));
+        IridiumSkyblockAPI.getInstance().getOpenMythicalChests().remove(getMythicalChestId());
+        mythicalChest.getPersistentDataContainer().set(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestStorage-" + storage), PersistentDataType.STRING, IridiumSkyblockAPI.inventorySerialize(getInventory()));
+        int value = 0;
+        for(ItemStack itemStack : getInventory().getContents()) {
+            if(itemStack != null && IridiumSkyblock.getInstance().getBlockValues().blockValues.containsKey(XMaterial.matchXMaterial(itemStack.getType()))) {
+                value += IridiumSkyblock.getInstance().getBlockValues().blockValues.get(XMaterial.matchXMaterial(itemStack.getType())).value * itemStack.getAmount();
+            }
         }
+
+        mythicalChest.getPersistentDataContainer().set(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestValue-" + storage), PersistentDataType.INTEGER, value);
+        mythicalChest.update();
+        IridiumSkyblockAPI.getInstance().getIslandViaLocation(mythicalChest.getLocation()).ifPresent(island -> {
+            if(!IridiumSkyblock.getInstance().getIslandsToRecalulate().contains(island)) {
+                IridiumSkyblock.getInstance().getIslandsToRecalulate().add(island);
+            }
+        });
+    }
+
+    private String getMythicalChestId() {
+        return mythicalChest.getLocation().toString() + "-" + storage;
     }
 }
