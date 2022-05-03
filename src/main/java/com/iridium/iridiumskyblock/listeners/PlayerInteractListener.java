@@ -91,14 +91,6 @@ public class PlayerInteractListener implements Listener {
                 return;
             }
 
-            if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState() instanceof EnderChest enderChest) {
-                if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
-                    player.openInventory(new MythicalChestMainGUI(enderChest).getInventory());
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-
             if (event.getAction() == Action.PHYSICAL && material == XMaterial.FARMLAND) {
                 if (!IridiumSkyblock.getInstance().getIslandManager().getIslandPermission(island, user, PermissionType.TRAMPLE_CROPS)) {
                     event.setCancelled(true);
@@ -133,6 +125,14 @@ public class PlayerInteractListener implements Listener {
                     if (hasNoCooldown(player)) {
                         player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().cannotSpawnEntities.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
                     }
+                }
+            }
+
+            if(!event.isCancelled() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getState() instanceof EnderChest enderChest) {
+                if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
+                    player.openInventory(new MythicalChestMainGUI(enderChest).getInventory());
+                    event.setCancelled(true);
+                    return;
                 }
             }
         });

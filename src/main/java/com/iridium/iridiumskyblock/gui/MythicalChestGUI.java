@@ -67,7 +67,6 @@ public class MythicalChestGUI extends BaseContainer {
     public void onClose(InventoryCloseEvent event) {
         if(!shouldSave) return;
 
-        IridiumSkyblockAPI.getInstance().getOpenMythicalChests().remove(getMythicalChestId());
         mythicalChest.getPersistentDataContainer().set(new NamespacedKey(IridiumSkyblock.getInstance(), "mythicalChestStorage-" + storage), PersistentDataType.STRING, IridiumSkyblockAPI.inventorySerialize(getInventory()));
         int value = 0;
         for(ItemStack itemStack : getInventory().getContents()) {
@@ -83,6 +82,8 @@ public class MythicalChestGUI extends BaseContainer {
                 IridiumSkyblock.getInstance().getIslandsToRecalulate().add(island);
             }
         });
+
+        Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), () -> IridiumSkyblockAPI.getInstance().getOpenMythicalChests().remove(getMythicalChestId()), 20 * 2);
     }
 
     private String getMythicalChestId() {
