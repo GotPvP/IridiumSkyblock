@@ -86,7 +86,7 @@ public final class Island extends DatabaseObject {
     public Island(String name, int id) {
         this(name, IridiumSkyblock.getInstance().getSchematics().schematics.values().stream().findFirst().get());
         this.id = id;
-        int worldNumber = ThreadLocalRandom.current().nextInt(8);
+        int worldNumber = ThreadLocalRandom.current().nextInt(1, 8);
         this.world = worldNumber == 0 ? IridiumSkyblock.getInstance().getConfiguration().worldName : IridiumSkyblock.getInstance().getConfiguration().worldName + "-" + worldNumber;
     }
 
@@ -102,7 +102,7 @@ public final class Island extends DatabaseObject {
         this.home = schematicConfig.xHome + "," + schematicConfig.yHome + "," + schematicConfig.zHome + ",0," + schematicConfig.yawHome;
         this.time = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()).toInstant().toEpochMilli();
         this.color = IridiumSkyblock.getInstance().getBorder().defaultColor;
-        int worldNumber = ThreadLocalRandom.current().nextInt(8);
+        int worldNumber = ThreadLocalRandom.current().nextInt(1, 8);
         this.world = worldNumber == 0 ? IridiumSkyblock.getInstance().getConfiguration().worldName : IridiumSkyblock.getInstance().getConfiguration().worldName + "-" + worldNumber;
     }
 

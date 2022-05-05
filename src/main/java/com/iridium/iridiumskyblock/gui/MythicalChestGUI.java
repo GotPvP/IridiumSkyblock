@@ -86,6 +86,10 @@ public class MythicalChestGUI extends BaseContainer {
         Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), () -> IridiumSkyblockAPI.getInstance().getOpenMythicalChests().remove(getMythicalChestId()), 20 * 2);
     }
 
+    public EnderChest getMythicalChest() {
+        return mythicalChest;
+    }
+
     private String getMythicalChestId() {
         return mythicalChest.getLocation().toString() + "-" + storage;
     }

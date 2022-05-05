@@ -6,9 +6,11 @@ import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.PermissionType;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
 import com.iridium.iridiumskyblock.database.*;
+import com.iridium.iridiumskyblock.gui.MythicalChestGUI;
 import com.iridium.iridiumskyblock.gui.MythicalChestMainGUI;
 import com.opblocks.overflowbackpacks.OverflowAPI;
 import com.opblocks.utils.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.EnderChest;
@@ -47,6 +49,14 @@ public class BlockBreakListener implements Listener {
         if(!event.isCancelled() && event.getBlock().getState() instanceof EnderChest enderChest) {
             if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
                 event.setCancelled(true);
+
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    if(p.getOpenInventory().getTopInventory().getHolder() instanceof MythicalChestMainGUI mythicalChestMainGUI && enderChest.equals(mythicalChestMainGUI.getMythicalChest())) {
+                        p.closeInventory();
+                    } else if(p.getOpenInventory().getTopInventory().getHolder() instanceof MythicalChestGUI mythicalChestGUI && enderChest.equals(mythicalChestGUI.getMythicalChest())) {
+                        p.closeInventory();
+                    }
+                });
 
                 int level = enderChest.getPersistentDataContainer().get(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER);
 

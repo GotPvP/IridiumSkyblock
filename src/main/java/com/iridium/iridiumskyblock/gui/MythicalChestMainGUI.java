@@ -117,4 +117,8 @@ public class MythicalChestMainGUI extends GUI {
             }
         }
     }
+
+    public EnderChest getMythicalChest() {
+        return mythicalChest;
+    }
 }
