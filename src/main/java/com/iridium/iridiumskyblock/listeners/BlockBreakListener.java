@@ -50,13 +50,19 @@ public class BlockBreakListener implements Listener {
             if(enderChest.getPersistentDataContainer().has(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER)) {
                 event.setCancelled(true);
 
-                Bukkit.getOnlinePlayers().forEach(p -> {
+                boolean canBreak = true;
+                for(Player p : Bukkit.getOnlinePlayers()) {
                     if(p.getOpenInventory().getTopInventory().getHolder() instanceof MythicalChestMainGUI mythicalChestMainGUI && enderChest.equals(mythicalChestMainGUI.getMythicalChest())) {
-                        p.closeInventory();
+                        canBreak = false;
                     } else if(p.getOpenInventory().getTopInventory().getHolder() instanceof MythicalChestGUI mythicalChestGUI && enderChest.equals(mythicalChestGUI.getMythicalChest())) {
-                        p.closeInventory();
+                        canBreak = false;
                     }
-                });
+                }
+
+                if(!canBreak) {
+                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &7Someone is currently viewing the chest! Please wait for them to stop before breaking!"));
+                    return;
+                }
 
                 int level = enderChest.getPersistentDataContainer().get(IridiumSkyblockAPI.getInstance().getMythicalChestKey(), PersistentDataType.INTEGER);
 
