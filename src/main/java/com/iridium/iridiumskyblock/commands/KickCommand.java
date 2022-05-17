@@ -54,7 +54,12 @@ public class KickCommand extends Command {
             return false;
         }
 
-        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
+        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
+        if(targetPlayer == null) {
+            player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().noPlayerFound.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+            return false;
+        }
+
         User targetUser = IridiumSkyblock.getInstance().getUserManager().getUser(targetPlayer);
         if (!island.get().equals(targetUser.getIsland().orElse(null))) {
             player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().userNotInYourIsland.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));

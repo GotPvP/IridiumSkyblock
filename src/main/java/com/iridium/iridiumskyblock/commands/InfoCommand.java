@@ -56,7 +56,12 @@ public class InfoCommand extends Command {
             return true;
         }
 
-        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(arguments[1]);
+        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(arguments[1]);
+        if(targetPlayer == null) {
+            sender.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().noPlayerFound.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+            return false;
+        }
+
         User targetUser = IridiumSkyblock.getInstance().getUserManager().getUser(targetPlayer);
         Optional<Island> targetIsland = targetUser.getIsland();
         if (!targetIsland.isPresent()) {

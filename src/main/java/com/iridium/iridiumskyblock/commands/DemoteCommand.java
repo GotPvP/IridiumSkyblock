@@ -55,7 +55,12 @@ public class DemoteCommand extends Command {
             return false;
         }
 
-        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(args[1]);
+        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayerIfCached(args[1]);
+        if(offlinePlayer == null) {
+            player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().noPlayerFound.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+            return false;
+        }
+
         User offlinePlayerUser = IridiumSkyblock.getInstance().getUserManager().getUser(offlinePlayer);
         if (!island.get().equals(offlinePlayerUser.getIsland().orElse(null))) {
             player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().userNotInYourIsland.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));

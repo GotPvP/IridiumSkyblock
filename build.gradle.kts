@@ -25,6 +25,7 @@ dependencies {
     // Dependencies that we want to shade in
     implementation(files("../OPBlocks/lib/IridiumCore-1.5.0.jar"))
     implementation(files("../OPBlocks/lib/Crunch-1.0.0.jar"))
+    compileOnly(files("../OPBlocks/lib/spigot-1.17.1-custom.jar"))
     compileOnly(files("../OPBlocks/lib/worldedit-bukkit-7.2.10.jar"))
     compileOnly(files("../OPBlocks/lib/CurrenciesAPI-MultiBridge.jar"))
     compileOnly(files("../OPBlocks/lib/OPCore-v1.16+.jar"))

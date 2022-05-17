@@ -49,7 +49,12 @@ public class ExtraValueCommand extends Command {
             return false;
         }
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[2]);
+        OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(args[2]);
+        if(player == null) {
+            sender.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().noPlayerFound.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+            return false;
+        }
+
         User user = IridiumSkyblock.getInstance().getUserManager().getUser(player);
         Optional<Island> island = user.getIsland();
         if (!island.isPresent()) {

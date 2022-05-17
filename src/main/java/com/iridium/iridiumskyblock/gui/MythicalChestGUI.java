@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * GUI which shows the value of valuable blocks.
@@ -39,7 +40,7 @@ public class MythicalChestGUI extends BaseContainer {
         if(IridiumSkyblockAPI.getInstance().getOpenMythicalChests().contains(getMythicalChestId())) {
             player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cYou can't have multiple people opening the chest!"));
             shouldSave = false;
-            Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), player::closeInventory, 2);
+            Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), (@NotNull Runnable) player::closeInventory, 2);
             return;
         } else {
             IridiumSkyblockAPI.getInstance().getOpenMythicalChests().add(getMythicalChestId());

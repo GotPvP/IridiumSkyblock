@@ -53,7 +53,12 @@ public class InviteCommand extends Command {
             return true;
         }
 
-        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(args[1]);
+        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayerIfCached(args[1]);
+        if(offlinePlayer == null) {
+            player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().noPlayerFound.replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+            return false;
+        }
+
         User offlinePlayerUser = IridiumSkyblock.getInstance().getUserManager().getUser(offlinePlayer);
         List<User> islandMembers = IridiumSkyblock.getInstance().getIslandManager().getIslandMembers(island.get());
         IslandUpgrade islandUpgrade = IridiumSkyblock.getInstance().getIslandManager().getIslandUpgrade(island.get(), "member");
