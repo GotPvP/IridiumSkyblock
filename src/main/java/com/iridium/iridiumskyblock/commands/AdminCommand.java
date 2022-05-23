@@ -2,12 +2,19 @@ package com.iridium.iridiumskyblock.commands;
 
 import com.iridium.iridiumcore.utils.StringUtils;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
+import com.iridium.iridiumskyblock.LogAction;
+import com.iridium.iridiumskyblock.PermissionType;
 import com.iridium.iridiumskyblock.api.IridiumSkyblockAPI;
+import com.iridium.iridiumskyblock.api.UserKickEvent;
 import com.iridium.iridiumskyblock.database.Island;
+import com.iridium.iridiumskyblock.database.IslandLog;
+import com.iridium.iridiumskyblock.database.User;
+import com.iridium.iridiumskyblock.utils.PlayerUtils;
 import com.opblocks.overflowbackpacks.OverflowAPI;
 import com.opblocks.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
@@ -84,6 +91,39 @@ public class AdminCommand extends Command {
                         });
                     }
                     return true;
+                } else if(args[1].equalsIgnoreCase("kick")) {
+                    if(sender instanceof Player player) {
+                        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+
+                        User user = IridiumSkyblock.getInstance().getUserManager().getUser(player);
+                        User targetUser = IridiumSkyblock.getInstance().getUserManager().getUser(targetPlayer);
+
+                        UserKickEvent userKickEvent = new UserKickEvent(targetUser.getIsland().get(), targetUser, user);
+                        Bukkit.getPluginManager().callEvent(userKickEvent);
+                        if (userKickEvent.isCancelled()) return false;
+
+                        if (targetPlayer instanceof Player) {
+                            ((Player) targetPlayer).sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().youHaveBeenKicked.replace("%player%", player.getName()).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+                            PlayerUtils.teleportSpawn((Player) targetPlayer);
+                        }
+
+                        targetUser.setIsland(null);
+
+                        // Send a message to all other members
+                        for (User member : targetUser.getIsland().get().getMembers()) {
+                            Player islandMember = Bukkit.getPlayer(member.getUuid());
+                            if (islandMember != null) {
+                                if (!islandMember.equals(player)) {
+                                    islandMember.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().kickedPlayer.replace("%kicker%", player.getName()).replace("%player%", targetUser.getName()).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+                                } else {
+                                    islandMember.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().youKickedPlayer.replace("%player%", targetUser.getName()).replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix)));
+                                }
+                            }
+                        }
+
+                        IslandLog islandLog = new IslandLog(targetUser.getIsland().get(), LogAction.USER_KICKED, user, targetUser, 0, "");
+                        IridiumSkyblock.getInstance().getDatabaseManager().getIslandLogTableManager().addEntry(islandLog);
+                    }
                 }
             } else {
                 sendHelp(sender);
@@ -99,6 +139,7 @@ public class AdminCommand extends Command {
         sender.sendMessage(StringUtils.color("&b/is admin size&f: &7View/Change the size of an island"));
         sender.sendMessage(StringUtils.color("&b/is admin mythicalchest <player>&f: &7Give a mythical chest"));
         sender.sendMessage(StringUtils.color("&b/is admin recalculate &f: &7Recalculate the island you're on"));
+        sender.sendMessage(StringUtils.color("&b/is admin kick &f: &7Kick a player"));
     }
 
     @Override
