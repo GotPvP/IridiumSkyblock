@@ -97,8 +97,9 @@ public class AdminCommand extends Command {
 
                         User user = IridiumSkyblock.getInstance().getUserManager().getUser(player);
                         User targetUser = IridiumSkyblock.getInstance().getUserManager().getUser(targetPlayer);
+                        Island island = targetUser.getIsland().get();
 
-                        UserKickEvent userKickEvent = new UserKickEvent(targetUser.getIsland().get(), targetUser, user);
+                        UserKickEvent userKickEvent = new UserKickEvent(island, targetUser, user);
                         Bukkit.getPluginManager().callEvent(userKickEvent);
                         if (userKickEvent.isCancelled()) return false;
 
@@ -110,7 +111,7 @@ public class AdminCommand extends Command {
                         targetUser.setIsland(null);
 
                         // Send a message to all other members
-                        for (User member : targetUser.getIsland().get().getMembers()) {
+                        for (User member : island.getMembers()) {
                             Player islandMember = Bukkit.getPlayer(member.getUuid());
                             if (islandMember != null) {
                                 if (!islandMember.equals(player)) {
@@ -121,7 +122,7 @@ public class AdminCommand extends Command {
                             }
                         }
 
-                        IslandLog islandLog = new IslandLog(targetUser.getIsland().get(), LogAction.USER_KICKED, user, targetUser, 0, "");
+                        IslandLog islandLog = new IslandLog(island, LogAction.USER_KICKED, user, targetUser, 0, "");
                         IridiumSkyblock.getInstance().getDatabaseManager().getIslandLogTableManager().addEntry(islandLog);
                     }
                 }

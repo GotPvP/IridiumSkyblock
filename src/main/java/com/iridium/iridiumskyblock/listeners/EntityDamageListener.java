@@ -95,7 +95,9 @@ public class EntityDamageListener implements Listener {
             }
 
             if (event.getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) {
-                event.getDamager().remove();
+                if(!(event.getDamager() instanceof Player)) {
+                    event.getDamager().remove();
+                }
             }
             
             event.setCancelled(true);

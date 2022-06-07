@@ -47,15 +47,18 @@ public class MoneyBankItem extends BankItem {
             IslandBank islandBank = IridiumSkyblock.getInstance().getIslandManager().getIslandBank(island.get(), this);
             double money = Math.min(amount.doubleValue(), islandBank.getNumber());
             if (money > 0) {
-                islandBank.setNumber(islandBank.getNumber() - money);
-                IridiumSkyblock.getInstance().getEconomy().depositPlayer(player, money);
-                player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankWithdrew
-                        .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
-                        .replace("%amount%", String.valueOf(money))
-                        .replace("%type%", getDisplayName())
-                );
-                IslandBankWithdrawEvent event = new IslandBankWithdrawEvent(island.get(), user, this, amount.doubleValue());
-                Bukkit.getPluginManager().callEvent(event);
+                if(IridiumSkyblock.getInstance().getEconomy().depositPlayer(player, money).transactionSuccess()) {
+                    islandBank.setNumber(islandBank.getNumber() - money);
+                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankWithdrew
+                                    .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
+                            .replace("%amount%", String.valueOf(money))
+                            .replace("%type%", getDisplayName())
+                    );
+                    IslandBankWithdrawEvent event = new IslandBankWithdrawEvent(island.get(), user, this, amount.doubleValue());
+                    Bukkit.getPluginManager().callEvent(event);
+                } else {
+                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cError occurred!"));
+                }
             } else {
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().insufficientFundsToWithdrew
                         .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
@@ -84,15 +87,18 @@ public class MoneyBankItem extends BankItem {
             IslandBank islandBank = IridiumSkyblock.getInstance().getIslandManager().getIslandBank(island.get(), this);
             double money = Math.min(amount.doubleValue(), IridiumSkyblock.getInstance().getEconomy().getBalance(player));
             if (money > 0) {
-                islandBank.setNumber(islandBank.getNumber() + money);
-                IridiumSkyblock.getInstance().getEconomy().withdrawPlayer(player, money);
-                player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankDeposited
-                        .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
-                        .replace("%amount%", String.valueOf(money))
-                        .replace("%type%", getDisplayName())
-                );
-                IslandBankDepositEvent event = new IslandBankDepositEvent(island.get(), user, this, amount.doubleValue());
-                Bukkit.getPluginManager().callEvent(event);
+                if(IridiumSkyblock.getInstance().getEconomy().withdrawPlayer(player, money).transactionSuccess()) {
+                    islandBank.setNumber(islandBank.getNumber() + money);
+                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().bankDeposited
+                                    .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
+                            .replace("%amount%", String.valueOf(money))
+                            .replace("%type%", getDisplayName())
+                    );
+                    IslandBankDepositEvent event = new IslandBankDepositEvent(island.get(), user, this, amount.doubleValue());
+                    Bukkit.getPluginManager().callEvent(event);
+                } else {
+                    player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getConfiguration().prefix + " &cError occurred!"));
+                }
             } else {
                 player.sendMessage(StringUtils.color(IridiumSkyblock.getInstance().getMessages().insufficientFundsToDeposit
                         .replace("%prefix%", IridiumSkyblock.getInstance().getConfiguration().prefix))
