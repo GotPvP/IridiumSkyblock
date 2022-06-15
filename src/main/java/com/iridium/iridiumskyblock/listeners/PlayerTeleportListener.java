@@ -13,7 +13,7 @@ public class PlayerTeleportListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.getTo() == null) return;
+        if(event.getCause() == PlayerTeleportEvent.TeleportCause.UNKNOWN && event.getTo().getWorld() == event.getFrom().getWorld() && event.getTo().distance(event.getFrom()) < 5) return;
         User user = IridiumSkyblock.getInstance().getUserManager().getUser(event.getPlayer());
         IridiumSkyblock.getInstance().getIslandManager().getIslandViaLocation(event.getTo()).ifPresent(island -> {
                     if (IridiumSkyblock.getInstance().getIslandManager().isBannedOnIsland(island, user)) {
@@ -24,9 +24,7 @@ public class PlayerTeleportListener implements Listener {
                         ));
                         event.setCancelled(true);
                     } else {
-                        Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), () ->
-                                        PlayerUtils.sendBorder(event.getPlayer(), island)
-                                , 1);
+                        Bukkit.getScheduler().runTaskLater(IridiumSkyblock.getInstance(), () -> PlayerUtils.sendBorder(event.getPlayer(), island), 1);
                     }
                 }
         );
